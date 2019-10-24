@@ -1,11 +1,15 @@
 package br.ufrn.imd.meformando.dominio;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -26,6 +30,9 @@ public class Formando {
 	@ManyToOne
 	@JoinColumn(name = "id_turma")
 	private Turma turma;
+	
+	@OneToMany(mappedBy = "formando", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Mensalidade> mensalidades;
 
 	public Formando() {
 		// TODO Auto-generated constructor stub

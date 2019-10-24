@@ -1,11 +1,14 @@
 package br.ufrn.imd.meformando.dominio;
 
 import java.io.File;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -18,10 +21,13 @@ public class Cerimonial {
 	
 	private String nome;
 	
-	//rever contrato, pois existe contrato com a turma e com cada formando
 	private File contrato;
 	
 	private double custo;
+	
+
+	@OneToMany(mappedBy = "cerimonial", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<EventoComemoracao> eventosComemoracoes;
 	
 	public Cerimonial() {
 		// TODO Auto-generated constructor stub

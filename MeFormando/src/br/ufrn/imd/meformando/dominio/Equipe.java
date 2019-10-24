@@ -1,9 +1,13 @@
 package br.ufrn.imd.meformando.dominio;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -15,6 +19,9 @@ public class Equipe {
 	private int id;
 	
 	private String nome;
+	
+	@OneToMany(mappedBy = "equipe", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Tarefa> tarefas;
 	
 	public Equipe() {
 		// TODO Auto-generated constructor stub
