@@ -15,13 +15,11 @@ import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 @Path("/usuario")
 public class UsuarioController {
 	@POST
-	@Produces("application/json; charset=UTF-8")
 	@Path("/logar")
-	public void logar(@HeaderParam("email") String email, 
+	public Response logar(@HeaderParam("email") String email, 
 			@HeaderParam("senha") String senha) {
 		//verifica se existem no banco
-		ResponseBuilder res = Response.status(200);
 		String token = TokenAuthenticationService.addAuthentication(email);
-		res.header("token", token);
+		return Response.status(200).header("token", token).build();
 	}
 }
