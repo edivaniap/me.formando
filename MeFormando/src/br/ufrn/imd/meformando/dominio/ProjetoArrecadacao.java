@@ -8,12 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
+@Table(name = "projetoArrecadacao")
 public class ProjetoArrecadacao {
 	
 	@Id
@@ -31,8 +34,11 @@ public class ProjetoArrecadacao {
 	@Temporal(TemporalType.DATE)
 	private Date dataFinal;
 	
-	@OneToMany(mappedBy = "projetoarrecadacao", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "projetoArrecadacao", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Tarefa> tarefas;
+	
+	@ManyToOne
+	private Turma turma;
 	
 	public ProjetoArrecadacao() {
 		// TODO Auto-generated constructor stub

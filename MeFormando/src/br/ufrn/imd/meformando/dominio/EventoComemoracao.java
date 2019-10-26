@@ -9,10 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
+@Table(name = "eventoComemoracao")
 public class EventoComemoracao {
 
 	@Id
@@ -26,6 +28,9 @@ public class EventoComemoracao {
 	private Date data;
 	
 	private double custo;
+	
+	@ManyToOne
+	private Cerimonial cerimonial;
 	
 	public EventoComemoracao() {
 		// TODO Auto-generated constructor stub
