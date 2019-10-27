@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.ufrn.imd.meformando.dominio.Formando;
+import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
+//alterar para as páginas que vamos usar
 @WebFilter("/pages/*")
 public class FiltroSeguranca implements Filter{
 
@@ -23,10 +25,12 @@ public class FiltroSeguranca implements Filter{
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		
-		Formando usuarioLogado = (Formando) req.getSession().getAttribute("usuarioLogado");
+		String token = req.getHeader("token");
+		String id = TokenAuthenticationService.getAuthentication(token);
 		
-		if (usuarioLogado == null) 
-			res.sendRedirect("/formando/index.jsf");
+		if (id == null) 
+			//envia um erro de autorizaçao
+			res.sendError(401);
 		else 
 			chain.doFilter(request, response);
 	}

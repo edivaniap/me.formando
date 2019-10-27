@@ -8,9 +8,9 @@ public class TokenAuthenticationService {
 	private static final String TOKEN_PREFIX = "MeFormando";
 	public static final String HEADER_STRING = "Authorization";
 	
-	public static String addAuthentication(String email) {
+	public static String addAuthentication(String id) {
 		String JWT = Jwts.builder()
-				.setSubject(email)
+				.setSubject(id)
 				.signWith(SignatureAlgorithm.HS512, SECRET)
 				.compact();
 		return JWT;
@@ -19,14 +19,14 @@ public class TokenAuthenticationService {
 	public static String getAuthentication(String token) {
 		if (token != null) {
 			// faz parse do token
-			String email = Jwts.parser()
+			String id = Jwts.parser()
 					.setSigningKey(SECRET)
 					.parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
 					.getBody()
 					.getSubject();
 			
-			if (email != null) {
-				return email;
+			if (id != null) {
+				return id;
 			}
 		}
 		//token inválido
