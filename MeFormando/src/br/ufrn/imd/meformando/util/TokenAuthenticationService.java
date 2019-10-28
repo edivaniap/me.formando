@@ -19,14 +19,14 @@ public class TokenAuthenticationService {
 	public static String getAuthentication(String token) {
 		if (token != null) {
 			// faz parse do token
-			String email = Jwts.parser()
+			String id = Jwts.parser()
 					.setSigningKey(SECRET)
 					.parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
 					.getBody()
 					.getSubject();
 			
-			if (email != null) {
-				return email;
+			if (id != null) {
+				return id;
 			}
 		}
 		//token inválido
