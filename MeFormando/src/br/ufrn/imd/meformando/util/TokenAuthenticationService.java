@@ -8,9 +8,9 @@ public class TokenAuthenticationService {
 	private static final String TOKEN_PREFIX = "MeFormando";
 	public static final String HEADER_STRING = "Authorization";
 	
-	public static String addAuthentication(String id) {
+	public static String addAuthentication(String email) {
 		String JWT = Jwts.builder()
-				.setSubject(id)
+				.setSubject(email)
 				.signWith(SignatureAlgorithm.HS512, SECRET)
 				.compact();
 		return JWT;

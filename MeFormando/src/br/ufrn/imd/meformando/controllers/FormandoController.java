@@ -17,7 +17,7 @@ import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
 @Stateless
 @Path("/usuario")
-public class UsuarioController {
+public class FormandoController {
 	
 	@Inject
 	private FormandoRepositorio formandoRepositorio;
@@ -27,8 +27,7 @@ public class UsuarioController {
 	public Response logar(@HeaderParam("email") String email, 
 			@HeaderParam("senha") String senha) {
 		Formando formandoLogado = formandoRepositorio.findFormandoByEmail(email);
-		
-		if (CryptService.verifyPasswords(senha, formandoLogado.getSenha())) {
+		if (formandoLogado != null && CryptService.verifyPasswords(senha, formandoLogado.getSenha())) {
 			String token = TokenAuthenticationService.addAuthentication(email);
 			return Response.status(201).header("token", token).build();
 		}else {
@@ -41,9 +40,12 @@ public class UsuarioController {
 	public Response registar(@HeaderParam("email") String email, 
 			@HeaderParam("senha") String senha) {
 		Formando novoFormando = new Formando();
-		
+		novoFormando.setEmail(email);
+		novoFormando.setSenha(senha);
 		if (formandoRepositorio.findFormandoByEmail(novoFormando.getEmail()) != null) {
 			return Response.status(202).header("erro", "Usuário Existente").build();
+		}else {
+			formandoRepositorio.adicionar(novoFormando);
 		}
 		return Response.status(201).build();
 	}
