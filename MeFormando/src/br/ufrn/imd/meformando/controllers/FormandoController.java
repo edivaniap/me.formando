@@ -27,6 +27,7 @@ public class FormandoController {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces
 	@Path("/logar")
 	public Response logar(@FormParam("email") String email, 
 			@FormParam("senha") String senha) {
