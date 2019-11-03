@@ -39,6 +39,15 @@ public class Formando {
 	public Formando() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Formando(String nome, String cpf, String email, String senha, boolean confirmadoTurma) {
+		super();
+		this.nome = nome;
+		this.cpf = cpf;
+		this.email = email;
+		this.senha = senha;
+		this.confirmadoTurma = confirmadoTurma;
+	}
 
 	public int getId() {
 		return id;
