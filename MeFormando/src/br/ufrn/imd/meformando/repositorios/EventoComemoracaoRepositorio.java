@@ -2,6 +2,7 @@ package br.ufrn.imd.meformando.repositorios;
 
 import java.util.List;
 
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -9,8 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.EventoComemoracao;
-import br.ufrn.imd.meformando.dominio.Formando;
-import br.ufrn.imd.meformando.util.CryptService;
+
 
 @Stateless
 public class EventoComemoracaoRepositorio {
