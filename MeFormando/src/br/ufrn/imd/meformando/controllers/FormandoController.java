@@ -31,7 +31,6 @@ public class FormandoController {
 	@Path("/logar")
 	public Response logar(@FormParam("email") String email, 
 			@FormParam("senha") String senha) {
-		System.out.println(senha);
 		Formando formandoLogado = formandoRepositorio.findFormandoByEmail(email);
 		if (formandoLogado != null && CryptService.verifyPasswords(senha, formandoLogado.getSenha())) {
 			String token = TokenAuthenticationService.addAuthentication(email);
@@ -44,16 +43,15 @@ public class FormandoController {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/registrar")
-	public Response registar(@FormParam("email") String email, 
+	public Response registar(@FormParam("nome") String nome, @FormParam("cpf") String cpf, 
+			@FormParam("email") String email, 
 			@FormParam("senha") String senha) {
-		Formando novoFormando = new Formando();
-		novoFormando.setEmail(email);
-		novoFormando.setSenha(senha);
+		Formando novoFormando = new Formando(nome, cpf, email, senha, false);
 		if (formandoRepositorio.findFormandoByEmail(novoFormando.getEmail()) != null) {
 			return Response.status(202).header("erro", "Usuário Existente").build();
 		}else {
 			formandoRepositorio.adicionar(novoFormando);
+			return Response.status(201).build();
 		}
-		return Response.status(201).build();
 	}
 }
