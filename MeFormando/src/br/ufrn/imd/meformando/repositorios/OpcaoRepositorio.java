@@ -4,12 +4,9 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Opcao;
-import br.ufrn.imd.meformando.util.CryptService;
 
 @Stateless
 public class OpcaoRepositorio {
@@ -22,7 +19,7 @@ public class OpcaoRepositorio {
 			em.persist(opcao);
 		else
 			em.merge(opcao);
-		return Opcao;
+		return opcao;
 	}
 	
 	public void remover(Opcao opcao) {

@@ -4,12 +4,9 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Mensalidade;
-import br.ufrn.imd.meformando.util.CryptService;
 
 @Stateless
 public class MensalidadeRepositorio {
@@ -26,7 +23,7 @@ public class MensalidadeRepositorio {
 	}
 	
 	public void remover(Mensalidade mensalidade) {
-		Mensalidade = em.find(Mensalidade.class, mensalidade.getId());
+		mensalidade = em.find(Mensalidade.class, mensalidade.getId());
 		em.remove(mensalidade);
 	}
 	

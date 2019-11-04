@@ -4,12 +4,9 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Voto;
-import br.ufrn.imd.meformando.util.CryptService;
 
 @Stateless
 public class VotoRepositorio {
@@ -21,7 +18,7 @@ public class VotoRepositorio {
 		if(voto.getId() == 0)
 			em.persist(voto);
 		else
-			em.merge(Voto);
+			em.merge(voto);
 		return voto;
 	}
 	

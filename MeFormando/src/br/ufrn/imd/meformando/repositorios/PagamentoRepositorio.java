@@ -4,12 +4,9 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Pagamento;
-import br.ufrn.imd.meformando.util.CryptService;
 
 @Stateless
 public class PagamentoRepositorio {
@@ -26,7 +23,7 @@ public class PagamentoRepositorio {
 	}
 	
 	public void remover(Pagamento pagamento) {
-		Pagamento = em.find(Pagamento.class, pagamento.getId());
+		pagamento = em.find(Pagamento.class, pagamento.getId());
 		em.remove(pagamento);
 	}
 	
