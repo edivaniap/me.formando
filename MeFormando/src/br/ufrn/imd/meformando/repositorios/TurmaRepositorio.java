@@ -26,7 +26,5 @@ public class TurmaRepositorio {
 	public Turma findTurmaByFormando(Formando formando) {
 		return formando.getTurma();
 	}
-	
-	
-	
 }
+
