@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -16,6 +17,7 @@ public class FormandoRepositorio {
 
 	@PersistenceContext
 	private EntityManager em;
+	
 	
 	public Formando adicionar(Formando formando) {
 		formando.setSenha(CryptService.getHashedPassword(formando.getSenha()));

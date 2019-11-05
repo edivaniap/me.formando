@@ -7,15 +7,12 @@ import javax.persistence.PersistenceContext;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
 
+
 @Stateless
 public class TurmaRepositorio {
 	
 	@PersistenceContext
 	private EntityManager em;
-	
-	public Turma findTurmaByFormando(Formando formando) {
-		return formando.getTurma();
-	}
 	
 	public Turma adicionar(Turma turma) {
 		
@@ -25,6 +22,11 @@ public class TurmaRepositorio {
 			em.merge(turma);
 		return turma;
 	}
+
+	public Turma findTurmaByFormando(Formando formando) {
+		return formando.getTurma();
+	}
+	
 	
 	
 }

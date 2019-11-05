@@ -1,19 +1,22 @@
 package br.ufrn.imd.meformando.controllers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import br.ufrn.imd.meformando.dominio.Formando;
+
 import br.ufrn.imd.meformando.repositorios.FormandoRepositorio;
 import br.ufrn.imd.meformando.util.CryptService;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
@@ -43,7 +46,7 @@ public class FormandoController {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/registrar")
-	public Response registar(@FormParam("nome") String nome, @FormParam("cpf") String cpf, 
+	public Response registrar(@FormParam("nome") String nome, @FormParam("cpf") String cpf, 
 			@FormParam("email") String email, 
 			@FormParam("senha") String senha) {
 		Formando novoFormando = new Formando(nome, cpf, email, senha, false);
@@ -52,6 +55,22 @@ public class FormandoController {
 		}else {
 			formandoRepositorio.adicionar(novoFormando);
 			return Response.status(201).build();
+		}
+	}
+	
+	
+	
+	@GET
+	@Path("/confirmadoTurma")
+	@Produces("application/json; charset=UTF-8")
+	public Formando confirmadoTurma(@FormParam("token") String token) {
+		String emailFormando = TokenAuthenticationService.getAuthentication(token);
+		if (emailFormando == null) {
+			
+			return null;
+		}else {
+			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+			return formando;
 		}
 	}
 }
