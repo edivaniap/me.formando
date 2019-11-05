@@ -22,6 +22,11 @@ public class CerimonialRepositorio {
 		return cerimonial;
 	}
 	
+	public Cerimonial alterar(Cerimonial cerimonial) {
+		
+		return cerimonial;
+	}
+	
 	public void remover(Cerimonial cerimonial) {
 		cerimonial = em.find(Cerimonial.class, cerimonial.getId());
 		em.remove(cerimonial);

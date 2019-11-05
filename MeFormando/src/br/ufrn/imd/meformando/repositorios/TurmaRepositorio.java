@@ -23,6 +23,11 @@ public class TurmaRepositorio {
 		return turma;
 	}
 
+	public Turma alterar(Turma turma) {				
+		em.persist(turma);		
+		return turma;
+	}
+	
 	public Turma findTurmaByFormando(Formando formando) {
 		return formando.getTurma();
 	}

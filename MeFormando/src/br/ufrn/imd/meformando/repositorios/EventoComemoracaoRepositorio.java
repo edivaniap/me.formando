@@ -6,7 +6,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import br.ufrn.imd.meformando.dominio.Cerimonial;
 import br.ufrn.imd.meformando.dominio.EventoComemoracao;
+
 
 @Stateless
 public class EventoComemoracaoRepositorio {
@@ -20,6 +22,15 @@ public class EventoComemoracaoRepositorio {
 		else
 			em.merge(eventoComemoracao);
 		return eventoComemoracao;
+	}
+	
+	public EventoComemoracao alterar(EventoComemoracao eventoComemoracao) {
+		em.persist(eventoComemoracao);
+		return eventoComemoracao;
+	}
+	
+	public List<EventoComemoracao> findTurmaByComissao(Cerimonial cerimonial) {
+		return cerimonial.getEventosComemoracoes();
 	}
 	
 	public void remover(EventoComemoracao eventoComemoracao) {
