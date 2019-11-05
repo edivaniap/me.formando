@@ -30,7 +30,7 @@ public class Turma {
 	
 	private	int semestreFormacao;
 	
-	private int curso;
+	private String curso;
 	
 	private int qtdFormandos;
 	
@@ -47,6 +47,20 @@ public class Turma {
 	public Turma() {
 		// TODO Auto-generated constructor stub
 	}
+
+	public Turma(String titulo, String instituicao, int anoFormacao, int semestreFormacao, String curso) {
+		super();
+		this.titulo = titulo;
+		this.instituicao = instituicao;
+		this.anoFormacao = anoFormacao;
+		this.semestreFormacao = semestreFormacao;
+		this.curso = curso;
+
+	}
+
+
+
+
 
 	public int getId() {
 		return id;
@@ -88,11 +102,11 @@ public class Turma {
 		this.semestreFormacao = semestreFormacao;
 	}
 
-	public int getCurso() {
+	public String getCurso() {
 		return curso;
 	}
 
-	public void setCurso(int curso) {
+	public void setCurso(String curso) {
 		this.curso = curso;
 	}
 
