@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -37,11 +36,6 @@ public class Formando {
 	@OneToMany(mappedBy = "formando", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Mensalidade> mensalidades;
 
-    @JoinTable(name="formando_has_tarefas",
-    joinColumns={@JoinColumn(name="formando_id")},
-    inverseJoinColumns={@JoinColumn(name="tarefa_id")})
-    private List<Tarefa> tarefas;
-	
 	public Formando() {
 		// TODO Auto-generated constructor stub
 	}
@@ -125,14 +119,6 @@ public class Formando {
 
 	public void setMensalidades(List<Mensalidade> mensalidades) {
 		this.mensalidades = mensalidades;
-	}
-	
-	public List<Tarefa> getTarefas() {
-		return tarefas;
-	}
-
-	public void setTarefas(List<Tarefa> tarefas) {
-		this.tarefas = tarefas;
 	}
 
 	@Override
