@@ -1,10 +1,13 @@
 package br.ufrn.imd.meformando.dominio;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -20,14 +23,13 @@ public class Tarefa {
 	
 	private String descricao;
 	private String status;
-	
-	@ManyToOne
-	@JoinColumn(name="id_equipe")
-	private Equipe equipe;
-	
+		
 	@ManyToOne
 	@JoinColumn(name="id_projetoarrecadacao")
 	private ProjetoArrecadacao projetoArrecadacao;
+	
+	@ManyToMany(mappedBy="tarefas")
+    private List<Formando> equipe;
 	
 	public Tarefa() {
 		// TODO Auto-generated constructor stub
@@ -57,20 +59,21 @@ public class Tarefa {
 		this.status = status;
 	}
 
-	public Equipe getEquipe() {
-		return equipe;
-	}
-
-	public void setEquipe(Equipe equipe) {
-		this.equipe = equipe;
-	}
-
 	public ProjetoArrecadacao getProjetoArrecadacao() {
 		return projetoArrecadacao;
 	}
 
 	public void setProjetoArrecadacao(ProjetoArrecadacao projetoArrecadacao) {
 		this.projetoArrecadacao = projetoArrecadacao;
+	}
+	
+
+	public List<Formando> getEquipe() {
+		return equipe;
+	}
+
+	public void setEquipe(List<Formando> equipe) {
+		this.equipe = equipe;
 	}
 
 	@Override
