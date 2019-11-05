@@ -13,7 +13,19 @@ public class TurmaRepositorio {
 	@PersistenceContext
 	private EntityManager em;
 	
+	public Turma adicionar(Turma turma) {
+		
+		if(turma.getId() == 0)
+			em.persist(turma);
+		else
+			em.merge(turma);
+		return turma;
+	}
+
 	public Turma findTurmaByFormando(Formando formando) {
 		return formando.getTurma();
 	}
+	
+	
+	
 }

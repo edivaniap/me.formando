@@ -47,7 +47,7 @@ public class Turma {
 	public Turma() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	public Turma(String titulo, String instituicao, int anoFormacao, int semestreFormacao, String curso) {
 		super();
 		this.titulo = titulo;

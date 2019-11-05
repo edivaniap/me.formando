@@ -17,6 +17,7 @@ public class FormandoRepositorio {
 	@PersistenceContext
 	private EntityManager em;
 	
+	
 	public Formando adicionar(Formando formando) {
 		formando.setSenha(CryptService.getHashedPassword(formando.getSenha()));
 		
@@ -24,6 +25,13 @@ public class FormandoRepositorio {
 			em.persist(formando);
 		else
 			em.merge(formando);
+		return formando;
+	}
+	
+	public Formando alterar(Formando formando) {
+		formando.setSenha(CryptService.getHashedPassword(formando.getSenha()));
+		
+		em.persist(formando);
 		return formando;
 	}
 	
