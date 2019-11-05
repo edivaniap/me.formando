@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
-@WebFilter("/pages/*")
+@WebFilter("/*")
 public class FiltroSeguranca implements Filter{
 
 	public void doFilter(ServletRequest request, ServletResponse response, 
@@ -24,13 +24,13 @@ public class FiltroSeguranca implements Filter{
 		HttpServletResponse res = (HttpServletResponse) response;
 		
 		String token = req.getHeader("token");
-		String id = TokenAuthenticationService.getAuthentication(token);
+		String email = TokenAuthenticationService.getAuthentication(token);
+		String path = req.getRequestURI().substring(req.getContextPath().length()).replaceAll("[/]+$", "");
 		
-		if (id == null) 
+		if (email == null && !path.equals("/usuario/logar") && !path.equals("/usuario/registrar"))
 			//envia um erro de autorizaçao
 			res.sendError(401);
 		else 
 			chain.doFilter(request, response);
 	}
-
 }
