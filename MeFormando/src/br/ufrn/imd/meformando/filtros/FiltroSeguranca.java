@@ -15,7 +15,7 @@ import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
 //alterar para as páginas que vamos usar
-@WebFilter("/pages/*")
+@WebFilter("/*")
 public class FiltroSeguranca implements Filter{
 
 	public void doFilter(ServletRequest request, ServletResponse response, 
@@ -27,12 +27,14 @@ public class FiltroSeguranca implements Filter{
 		
 		String token = req.getHeader("token");
 		String id = TokenAuthenticationService.getAuthentication(token);
+		String path = req.getRequestURI().substring(req.getContextPath().length()).replaceAll("[/]+$", "");
 		
-		if (id == null) 
+		if (id == null && !path.equals("/usuario/logar") && !path.equals("/usuario/registrar")) {
 			//envia um erro de autorizaçao
 			res.sendError(401);
-		else 
+		}	
+		else { 
 			chain.doFilter(request, response);
+		}
 	}
-
 }
