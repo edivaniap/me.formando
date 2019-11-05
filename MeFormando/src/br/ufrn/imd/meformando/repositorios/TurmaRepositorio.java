@@ -16,4 +16,15 @@ public class TurmaRepositorio {
 	public Turma findTurmaByFormando(Formando formando) {
 		return formando.getTurma();
 	}
+	
+	public Turma adicionar(Turma turma) {
+		
+		if(turma.getId() == 0)
+			em.persist(turma);
+		else
+			em.merge(turma);
+		return turma;
+	}
+	
+	
 }
