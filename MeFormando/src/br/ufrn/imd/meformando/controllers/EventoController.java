@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +13,11 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -82,29 +86,29 @@ public class EventoController {
 
 	}
 	
-//	@POST
-//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//	@Path("/alterar")
-//	public Response alterar(@FormParam("token") String token,@FormParam("Nome") String nome, @FormParam("Custo") int custo, 
-//			@FormParam("Descricao") String descricao ) {
-//		
-//			String emailFormando = TokenAuthenticationService.getAuthentication(token);
-//			if (emailFormando == null) {
-//				return Response.status(202).build();
-//			}else {
-//				Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
-//				
-//				Turma atualizarTurma = turmaRepositorio.findTurmaByFormando(formando);
-//				Cerimonial cerimonial = atualizarTurma.getCerimonial();
-//				cerimonial.setNome(nome);
-//				cerimonial.setCusto(custo);
-//				cerimonial.setDescricao(descricao);
-//				atualizarTurma.setCerimonial(cerimonial);
-//				turmaRepositorio.alterar(atualizarTurma);			
-//				cerimonialRepositorio.alterar(cerimonial);
-//				return Response.status(201).build();
-//			
-//			}
-//
-//	}
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Path("/alterar")
+	public Response alterar(@FormParam("token") String token,@FormParam("id") int id,@FormParam("Titulo") String titulo, @FormParam("Custo") double custo, 
+			@FormParam("Date") String data,
+			@FormParam("Descricao") String descricao ) throws ParseException {
+			
+			String emailFormando = TokenAuthenticationService.getAuthentication(token);
+			if (emailFormando == null) {
+				return Response.status(202).build();
+			}else {
+				DateFormat formatter = new SimpleDateFormat("yy-MM-dd");
+				Date date = (Date)formatter.parse(data);
+				EventoComemoracao evento = eventoComemoracaoRepositorio.findFormandoById(id);
+				evento.setData(date);
+				evento.setTitulo(titulo);
+				evento.setCusto(custo);
+				evento.setDescricao(descricao);
+				eventoComemoracaoRepositorio.alterar(evento);				
+				return Response.status(201).build();
+			
+			}
+
+	}
+	
 }

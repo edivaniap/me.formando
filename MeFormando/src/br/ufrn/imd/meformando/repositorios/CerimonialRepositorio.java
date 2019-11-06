@@ -4,9 +4,12 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Cerimonial;
+import br.ufrn.imd.meformando.dominio.Formando;
 
 @Stateless
 public class CerimonialRepositorio {
@@ -35,6 +38,9 @@ public class CerimonialRepositorio {
 	@SuppressWarnings("unchecked")
 	public List<Cerimonial> listar() {
 		return (List<Cerimonial>) em.createQuery("select c from Cerimonial c").getResultList();
-	}	
+	}
+	
+	
+
 
 }
