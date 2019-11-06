@@ -1,6 +1,7 @@
 package br.ufrn.imd.meformando.controllers;
 
-
+import java.util.Arrays;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -26,7 +27,6 @@ public class FormandoController {
 	
 	@Inject
 	private FormandoRepositorio formandoRepositorio;
-	
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -62,14 +62,15 @@ public class FormandoController {
 	
 	@GET
 	@Path("/confirmadoTurma")
-	public boolean confirmadoTurma(@FormParam("token") String token, @FormParam("teste") boolean teste){
-
+	@Produces("application/json; charset=UTF-8")
+	public Formando confirmadoTurma(@FormParam("token") String token) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			return false;
+			
+			return null;
 		}else {
 			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
-			return formando.isConfirmadoTurma();
+			return formando;
 		}
 	}
 }
