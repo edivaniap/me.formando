@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
+
 @WebFilter("/*")
 public class FiltroSeguranca implements Filter{
 
@@ -24,6 +25,7 @@ public class FiltroSeguranca implements Filter{
 		HttpServletResponse res = (HttpServletResponse) response;
 		
 		String token = req.getHeader("token");
+
 		String email = TokenAuthenticationService.getAuthentication(token);
 		String path = req.getRequestURI().substring(req.getContextPath().length()).replaceAll("[/]+$", "");
 		
@@ -33,4 +35,5 @@ public class FiltroSeguranca implements Filter{
 		else 
 			chain.doFilter(request, response);
 	}
+
 }

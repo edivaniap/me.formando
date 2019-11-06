@@ -27,6 +27,7 @@ public class Cerimonial {
 	
 	private double custo;
 	
+	private String descricao;
 
 	@OneToMany(mappedBy = "cerimonial", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<EventoComemoracao> eventosComemoracoes;
@@ -34,6 +35,15 @@ public class Cerimonial {
 	public Cerimonial() {
 		// TODO Auto-generated constructor stub
 	}
+	
+
+	public Cerimonial(String nome, double custo, String descricao) {
+		super();
+		this.nome = nome;
+		this.custo = custo;
+		this.descricao = descricao;
+	}
+
 
 	public int getId() {
 		return id;
@@ -95,6 +105,14 @@ public class Cerimonial {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 }

@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+
 import javax.persistence.PersistenceContext;
 
 import br.ufrn.imd.meformando.dominio.Cerimonial;
+
 
 @Stateless
 public class CerimonialRepositorio {
@@ -22,6 +24,11 @@ public class CerimonialRepositorio {
 		return cerimonial;
 	}
 	
+	public Cerimonial alterar(Cerimonial cerimonial) {
+		
+		return cerimonial;
+	}
+	
 	public void remover(Cerimonial cerimonial) {
 		cerimonial = em.find(Cerimonial.class, cerimonial.getId());
 		em.remove(cerimonial);
@@ -30,6 +37,9 @@ public class CerimonialRepositorio {
 	@SuppressWarnings("unchecked")
 	public List<Cerimonial> listar() {
 		return (List<Cerimonial>) em.createQuery("select c from Cerimonial c").getResultList();
-	}	
+	}
+	
+	
+
 
 }

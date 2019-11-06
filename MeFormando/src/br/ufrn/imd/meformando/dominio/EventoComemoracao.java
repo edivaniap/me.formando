@@ -23,17 +23,44 @@ public class EventoComemoracao {
 	
 	private String titulo;
 	
+	private double custo;
+	
 	@Temporal(TemporalType.DATE)
 	private Date data;
+
+	private String descricao;
 	
-	private double custo;
 	
 	@ManyToOne
 	private Cerimonial cerimonial;
 	
+	public Cerimonial getCerimonial() {
+		return cerimonial;
+	}
+
+
+
+	public void setCerimonial(Cerimonial cerimonial) {
+		this.cerimonial = cerimonial;
+	}
+
+
+
 	public EventoComemoracao() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+
+	public EventoComemoracao(String titulo, double custo, Date data, String descricao) {
+		super();
+		this.titulo = titulo;
+		this.custo = custo;
+		this.data = data;
+		this.descricao = descricao;
+	}
+
+
 
 	public int getId() {
 		return id;
@@ -87,6 +114,14 @@ public class EventoComemoracao {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 	
 }
