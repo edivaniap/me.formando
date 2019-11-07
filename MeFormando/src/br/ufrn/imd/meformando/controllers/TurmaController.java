@@ -34,6 +34,7 @@ public class TurmaController {
 	
 	@GET
 	@Path("/turma")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json; charset=UTF-8")
 	public List<Object> turmas(@HeaderParam("token") String token) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
@@ -43,18 +44,47 @@ public class TurmaController {
 		}else {
 			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
 			Turma turma = turmaRepositorio.findTurmaByFormando(formando);
-			return Arrays.asList(formando.isConfirmadoTurma(), turma);
+			return Arrays.asList(formando.isConfirmadoTurma());
+		}
+	}
+	
+	@GET
+	@Path("/formandos")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces("application/json; charset=UTF-8")
+	public List<Object> formandos(@HeaderParam("token") String token) {
+		String emailFormando = TokenAuthenticationService.getAuthentication(token);
+		if (emailFormando == null) {
+			//condição caso o token seja inválido
+			return null;
+		}else {
+			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+			Turma turma = turmaRepositorio.findTurmaByFormando(formando);
+			List<Formando> formandos = turma.getFormandos();
+			List<Object> formandosDaTurma = new ArrayList<Object>();
+			for(int i = 0; i < formandos.size(); i++) {
+				Formando formandoDaTurma = formandos.get(i);
+				formandosDaTurma.add(Arrays.asList(formandoDaTurma.getEmail(),formandoDaTurma.getNome(),formandoDaTurma.isComissao()));
+			}
+			return formandosDaTurma;
 		}
 	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/criar")
-	public Response criar(@FormParam("token") String token,@FormParam("Titulo") String titulo, @FormParam("Instituicao") String instituicao, 
+	public Response criar(@HeaderParam("token") String token,@FormParam("Titulo") String titulo, @FormParam("Instituicao") String instituicao, 
 			@FormParam("AnoFormacao") int anoFormacao, 
 			@FormParam("SemestreFormacao") int semestreFormacao ,@FormParam("Curso") String curso) {
+			
+			if(token == null || token == "") {
+				System.out.println(titulo);
+				System.out.println("Token vazio");
+				return Response.status(203).build();
+			}
 			String emailFormando = TokenAuthenticationService.getAuthentication(token);
 			if (emailFormando == null) {
+				System.out.print(emailFormando);
 				return Response.status(202).build();
 			}else {
 				Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
@@ -74,4 +104,6 @@ public class TurmaController {
 			}
 
 	}
+	
+	
 }

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
 
-@WebFilter("/*")
+@WebFilter("/pages/*")
 public class FiltroSeguranca implements Filter{
 
 	public void doFilter(ServletRequest request, ServletResponse response, 
@@ -30,7 +30,7 @@ public class FiltroSeguranca implements Filter{
 		String path = req.getRequestURI().substring(req.getContextPath().length()).replaceAll("[/]+$", "");
 		
 		if (email == null && !path.equals("/usuario/logar") && !path.equals("/usuario/registrar"))
-			//envia um erro de autorizaÃ§ao
+			//envia um erro de autorizaçao
 			res.sendError(401);
 		else 
 			chain.doFilter(request, response);

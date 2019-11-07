@@ -1,3 +1,4 @@
+  
 package br.ufrn.imd.meformando.util;
 
 import org.mindrot.jbcrypt.BCrypt;

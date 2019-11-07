@@ -10,7 +10,7 @@ import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Cerimonial;
 import br.ufrn.imd.meformando.dominio.EventoComemoracao;
-
+import br.ufrn.imd.meformando.dominio.Formando;
 
 
 @Stateless
@@ -46,7 +46,7 @@ public class EventoComemoracaoRepositorio {
 		return (List<EventoComemoracao>) em.createQuery("select e from EventoComemoracao e").getResultList();
 	}	
 
-	public EventoComemoracao findFormandoById(int id) {
+	public EventoComemoracao findEventoById(int id) {
 		try {
 			String jpaql ="select f from EventoComemoracao f where f.id = :id";
 			Query q = em.createQuery(jpaql);
