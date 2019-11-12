@@ -35,6 +35,17 @@ public class Formando {
 	
 	@OneToMany(mappedBy = "formando", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Mensalidade> mensalidades;
+	
+	@OneToMany(mappedBy = "formando", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Convite> convites;
+
+	public List<Convite> getConvites() {
+		return convites;
+	}
+
+	public void setConvites(List<Convite> convites) {
+		this.convites = convites;
+	}
 
 	public Formando() {
 		// TODO Auto-generated constructor stub

@@ -4,14 +4,9 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
 import br.ufrn.imd.meformando.dominio.Cerimonial;
-import br.ufrn.imd.meformando.dominio.EventoComemoracao;
-import br.ufrn.imd.meformando.dominio.Formando;
-import br.ufrn.imd.meformando.dominio.Turma;
+
 
 @Stateless
 public class CerimonialRepositorio {
