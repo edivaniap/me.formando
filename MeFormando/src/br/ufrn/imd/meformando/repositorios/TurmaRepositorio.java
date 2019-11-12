@@ -2,7 +2,9 @@ package br.ufrn.imd.meformando.repositorios;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
@@ -30,6 +32,17 @@ public class TurmaRepositorio {
 	
 	public Turma findTurmaByFormando(Formando formando) {
 		return formando.getTurma();
+	}
+	
+	public Turma findTurmaById(int id) {
+		try {
+			String jpaql ="select f from Turma f where f.id = :id";
+			Query q = em.createQuery(jpaql);
+			q.setParameter("id", id);
+			return (Turma) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 }
 
