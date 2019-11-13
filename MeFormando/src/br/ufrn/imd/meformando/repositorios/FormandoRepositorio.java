@@ -28,7 +28,8 @@ public class FormandoRepositorio {
 		return formando;
 	}
 	
-	public Formando alterar(Formando formando) {		
+
+	public Formando alterar(Formando formando) {
 		em.persist(formando);
 		return formando;
 	}
