@@ -28,9 +28,7 @@ public class FormandoRepositorio {
 		return formando;
 	}
 	
-	public Formando alterar(Formando formando) {
-		formando.setSenha(CryptService.getHashedPassword(formando.getSenha()));
-		
+	public Formando alterar(Formando formando) {		
 		em.persist(formando);
 		return formando;
 	}

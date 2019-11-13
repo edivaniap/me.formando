@@ -10,7 +10,7 @@ import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Cerimonial;
 import br.ufrn.imd.meformando.dominio.EventoComemoracao;
-import br.ufrn.imd.meformando.dominio.Formando;
+
 
 
 @Stateless

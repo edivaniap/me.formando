@@ -50,16 +50,15 @@ public class FormandoController {
 	public Response logar(@FormParam("email") String email, 
 			@FormParam("senha") String senha) {
 		Formando formandoLogado = formandoRepositorio.findFormandoByEmail(email);
+	
 		if (formandoLogado != null && CryptService.verifyPasswords(senha, formandoLogado.getSenha())) {
-			System.out.println("Deu certo!!!");
 			System.out.println(formandoLogado.getEmail());
-			System.out.println(CryptService.verifyPasswords(senha, formandoLogado.getSenha()));
+			System.out.println(formandoLogado.getSenha());
 			String token = TokenAuthenticationService.addAuthentication(email);
 			return Response.status(201).header("token", token).build();
 		}else {
-			System.out.println("Deu errado!!!");
 			System.out.println(formandoLogado.getEmail());
-			System.out.println(CryptService.verifyPasswords(senha, formandoLogado.getSenha()));
+			System.out.println(formandoLogado.getSenha());
 			return Response.status(202).header("erro", "Senha ou Email Inválidos").build();
 		}
 	}
@@ -82,7 +81,7 @@ public class FormandoController {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/aceitarConvite")
-	public Response aceitarConvite(@HeaderParam("token") String token,@FormParam("id") int id) {
+	public Response aceitarConvite(@HeaderParam("token") String token,@FormParam("id") int id,@FormParam("idConvite") int idConvite) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
 			//condição caso o token seja inválido
@@ -94,6 +93,34 @@ public class FormandoController {
 				formando.setConfirmadoTurma(true);
 				formando.setTurma(turma);
 				formandoRepositorio.alterar(formando);
+				
+				Convite convite = conviteRepositorio.findConviteById(idConvite);
+				conviteRepositorio.remover(convite);
+				return Response.status(201).build();
+			}
+			
+			
+			
+			
+			return null;
+			
+			
+		}
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Path("/recusarConvite")
+	public Response recusarConvite(@HeaderParam("token") String token,@FormParam("id") int id,@FormParam("idConvite") int idConvite) {
+		String emailFormando = TokenAuthenticationService.getAuthentication(token);
+		if (emailFormando == null) {
+			//condição caso o token seja inválido
+			return null;
+		}else {
+			Turma turma = turmaRepositorio.findTurmaById(id);
+			if(turma != null) {
+				Convite convite = conviteRepositorio.findConviteById(idConvite);
+				conviteRepositorio.remover(convite);
 				return Response.status(201).build();
 			}
 			
@@ -151,7 +178,7 @@ public class FormandoController {
 			for(int i = 0 ; i < convites.size(); i++) {
 				Convite convite = convites.get(i);
 				Turma turma = turmaRepositorio.findTurmaById(convite.getIdDaTurma());
-				convitesDoFormando.add(Arrays.asList(turma.getTitulo(),convite.getFormandoQueConvidou(),turma.getId()));
+				convitesDoFormando.add(Arrays.asList(turma.getTitulo(),convite.getFormandoQueConvidou(),turma.getId(),convite.getId()));
 				
 			}
 			
