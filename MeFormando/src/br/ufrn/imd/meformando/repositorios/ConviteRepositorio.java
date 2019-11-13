@@ -9,6 +9,7 @@ import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Convite;
 
+
 @Stateless
 public class ConviteRepositorio {
 	
@@ -45,6 +46,17 @@ public class ConviteRepositorio {
 			return null;
 		}
 	
+	}
+
+	public Convite findConviteById(int id) {
+		try {
+			String jpaql ="select f from Convite f where f.id = :id";
+			Query q = em.createQuery(jpaql);
+			q.setParameter("id", id);
+			return (Convite) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 }
