@@ -86,11 +86,11 @@ public class TurmaController {
 				return Response.status(202).build();
 			}else {
 				Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+
 				Turma novaTurma = new Turma(titulo,instituicao,anoFormacao,semestreFormacao,curso);
 				formando.setComissao(true);
 				formando.setTurma(novaTurma);
 				formando.setConfirmadoTurma(true);
-				
 				formandoRepositorio.alterar(formando);
 				ArrayList<Formando> formandos = new ArrayList<Formando>();
 				formandos.add(formando);
@@ -134,6 +134,8 @@ public class TurmaController {
 			
 			}
 
+
+	
 	}
 	
 	
