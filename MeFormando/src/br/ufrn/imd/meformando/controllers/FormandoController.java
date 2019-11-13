@@ -1,13 +1,10 @@
 package br.ufrn.imd.meformando.controllers;
 
-
-
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -20,13 +17,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
 import br.ufrn.imd.meformando.dominio.Convite;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
+import br.ufrn.imd.meformando.exceptions.NegocioException;
 import br.ufrn.imd.meformando.repositorios.ConviteRepositorio;
 import br.ufrn.imd.meformando.repositorios.FormandoRepositorio;
 import br.ufrn.imd.meformando.repositorios.TurmaRepositorio;
+import br.ufrn.imd.meformando.services.FormandoService;
 import br.ufrn.imd.meformando.util.CryptService;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
@@ -59,24 +57,39 @@ public class FormandoController {
 		}else {
 			System.out.println(formandoLogado.getEmail());
 			System.out.println(formandoLogado.getSenha());
-			return Response.status(202).header("erro", "Senha ou Email Inválidos").build();
+			return Response.status(202).header("erro", "Senha ou Email Invï¿½lidos").build();
 		}
 	}
+	
+	
+	/*UNICA CLASSE USANDO O SERVICE POR ENQUANTO. FALTA TESTAR*/
+	@EJB
+	private FormandoService formandoService;
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/registrar")
-	public Response registrar(@FormParam("nome") String nome, @FormParam("cpf") String cpf, 
+	public Response registrar(
+			@FormParam("nome") String nome,
+			@FormParam("cpf") String cpf, 
 			@FormParam("email") String email, 
-			@FormParam("senha") String senha) {
+			@FormParam("senha") String senha
+			) {
+		
 		Formando novoFormando = new Formando(nome, cpf, email, senha, false);
-		if (formandoRepositorio.findFormandoByEmail(novoFormando.getEmail()) != null) {
-			return Response.status(202).header("erro", "Usuário Existente").build();
-		}else {
-			formandoRepositorio.adicionar(novoFormando);
-			return Response.status(201).build();
+		
+		try {
+			formandoService.adicionar(novoFormando);
+		} catch (NegocioException e) {
+			//ainda nao consigo pegar mensagem de erro no vue, apenas o status
+			System.out.println(e.getMessage());
+			return Response.status(202).header("Erro", e.getMessage()).build();
 		}
+		
+		return Response.status(201).build();
 	}
+	
+	//FAZENDO ESSE
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -84,7 +97,7 @@ public class FormandoController {
 	public Response aceitarConvite(@HeaderParam("token") String token,@FormParam("id") int id,@FormParam("idConvite") int idConvite) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			//condição caso o token seja inválido
+			//condiï¿½ï¿½o caso o token seja invï¿½lido
 			return null;
 		}else {
 			Turma turma = turmaRepositorio.findTurmaById(id);
@@ -98,13 +111,8 @@ public class FormandoController {
 				conviteRepositorio.remover(convite);
 				return Response.status(201).build();
 			}
-			
-			
-			
-			
-			return null;
-			
-			
+	
+			return null;	
 		}
 	}
 	
@@ -114,7 +122,7 @@ public class FormandoController {
 	public Response recusarConvite(@HeaderParam("token") String token,@FormParam("id") int id,@FormParam("idConvite") int idConvite) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			//condição caso o token seja inválido
+			//condiï¿½ï¿½o caso o token seja invï¿½lido
 			return null;
 		}else {
 			Turma turma = turmaRepositorio.findTurmaById(id);
@@ -188,8 +196,4 @@ public class FormandoController {
 			
 		}
 	}
-	
-	
-	
-
 }

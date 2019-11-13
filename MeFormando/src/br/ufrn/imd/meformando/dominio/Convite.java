@@ -62,11 +62,4 @@ public class Convite {
 	public int getId() {
 		return id;
 	}
-
-
-	
-	
-	
-	
-
 }
