@@ -44,6 +44,8 @@ public class FormandoController {
 	@EJB
 	private FormandoService formandoService;
 	
+	
+	/* USANDO O SERVICE */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces
@@ -60,8 +62,6 @@ public class FormandoController {
 		
 		return Response.status(201).header("token", token).build();	
 	}
-	
-	
 	
 	
 	/* USANDO O SERVICE */
@@ -87,8 +87,7 @@ public class FormandoController {
 		return Response.status(201).build();
 	}
 	
-	//FAZENDO ESSE
-	
+	//FAZENDO ESSE	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/aceitarConvite")
@@ -130,17 +129,12 @@ public class FormandoController {
 				return Response.status(201).build();
 			}
 			
-			
-			
-			
 			return null;
-			
-			
 		}
 	}
 	
 	
-	//usando service
+	/* USANDO O SERVICE */
 	@GET
 	@Path("/confirmadoTurma")
 	public boolean isConfirmadoTurma(@HeaderParam("token") String token){
@@ -155,8 +149,8 @@ public class FormandoController {
 		return formandoLogado.isConfirmadoTurma();
 	}
 	
-	//usando service
 	
+	/* USANDO O SERVICE */
 	@GET
 	@Path("/confirmadoComissao")
 	public boolean isComissao(@HeaderParam("token") String token){
@@ -171,8 +165,8 @@ public class FormandoController {
 		return formandoLogado.isComissao();
 	}
 	
-	//usando service (medio) - mas ta mt confuso, precisa revisar
-	
+	/* USANDO O SERVICE */
+	// em andamento. e esta mt confuso, precisa revisar classe convite
 	@GET
 	@Path("/convites")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -194,11 +188,7 @@ public class FormandoController {
 				convitesDoFormando.add(Arrays.asList(turma.getTitulo(),convite.getFormandoQueConvidou(),turma.getId(),convite.getId()));
 				
 			}
-			
-			
 			return convitesDoFormando;
-			
-			
 		}
 	}
 }
