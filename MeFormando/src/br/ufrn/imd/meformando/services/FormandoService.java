@@ -15,6 +15,7 @@ import br.ufrn.imd.meformando.exceptions.NegocioException;
 import br.ufrn.imd.meformando.repositorios.ConviteRepositorio;
 import br.ufrn.imd.meformando.repositorios.FormandoRepositorio;
 import br.ufrn.imd.meformando.repositorios.TurmaRepositorio;
+import br.ufrn.imd.meformando.util.CryptService;
 
 @Stateless
 public class FormandoService {
@@ -53,6 +54,22 @@ public class FormandoService {
 	public Formando getFormando(String email) {
 		return formandoRepository.findFormandoByEmail(email);
 	}
+	
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public boolean logar(String email, String senha) throws NegocioException {
+    	
+		Formando formandoDB = formandoRepository.findFormandoByEmail(email);
+		
+		if(formandoDB == null) 
+			throw new
+			NegocioException("Este e-email nao esta cadastrado no nosso sistema");
+		else if(!CryptService.verifyPasswords(senha, formandoDB.getSenha()))
+			throw new
+			NegocioException("Senha incorreta");
+		
+		return CryptService.verifyPasswords(senha, formandoDB.getSenha());
+	}
+	
 	
 	/*
 	 * @TransactionAttribute(TransactionAttributeType.REQUIRED) public void

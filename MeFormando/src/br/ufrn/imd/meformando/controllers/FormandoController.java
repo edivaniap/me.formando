@@ -41,30 +41,30 @@ public class FormandoController {
 	@Inject 
 	private ConviteRepositorio conviteRepositorio;
 	
+	@EJB
+	private FormandoService formandoService;
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces
 	@Path("/logar")
-	public Response logar(@FormParam("email") String email, 
-			@FormParam("senha") String senha) {
-		Formando formandoLogado = formandoRepositorio.findFormandoByEmail(email);
-	
-		if (formandoLogado != null && CryptService.verifyPasswords(senha, formandoLogado.getSenha())) {
-			System.out.println(formandoLogado.getEmail());
-			System.out.println(formandoLogado.getSenha());
-			String token = TokenAuthenticationService.addAuthentication(email);
-			return Response.status(201).header("token", token).build();
-		}else {
-			System.out.println(formandoLogado.getEmail());
-			System.out.println(formandoLogado.getSenha());
-			return Response.status(202).header("erro", "Senha ou Email Inv�lidos").build();
+	public Response logar(@FormParam("email") String email, @FormParam("senha") String senha) {
+		String token = "";
+
+		try {
+			if(formandoService.logar(email, senha))
+				token = TokenAuthenticationService.addAuthentication(email);
+		} catch (NegocioException e) {
+			return Response.status(202).header("erro", "Erro: " + e.getMessage()).build();
 		}
+		
+		return Response.status(201).header("token", token).build();	
 	}
 	
 	
-	/*UNICA CLASSE USANDO O SERVICE POR ENQUANTO. FALTA TESTAR*/
-	@EJB
-	private FormandoService formandoService;
+	
+	
+	/* USANDO O SERVICE */
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -81,9 +81,7 @@ public class FormandoController {
 		try {
 			formandoService.adicionar(novoFormando);
 		} catch (NegocioException e) {
-			//ainda nao consigo pegar mensagem de erro no vue, apenas o status
-			System.out.println(e.getMessage());
-			return Response.status(202).header("Erro", e.getMessage()).build();
+			return Response.status(202).header("erro", "Erro: " + e.getMessage()).build();
 		}
 		
 		return Response.status(201).build();
@@ -142,46 +140,53 @@ public class FormandoController {
 	}
 	
 	
-	
+	//usando service
 	@GET
 	@Path("/confirmadoTurma")
-	public boolean confirmadoTurma(@HeaderParam("token") String token){
+	public boolean isConfirmadoTurma(@HeaderParam("token") String token){
 
-		String emailFormando = TokenAuthenticationService.getAuthentication(token);
-		if (emailFormando == null) {
+		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+		
+		if (emailAutenticado == null) {
 			return false;
-		}else {
-			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
-			return formando.isConfirmadoTurma();
 		}
+		
+		Formando formandoLogado = formandoService.getFormando(emailAutenticado);
+		return formandoLogado.isConfirmadoTurma();
 	}
+	
+	//usando service
 	
 	@GET
 	@Path("/confirmadoComissao")
-	public boolean confirmadoComissao(@HeaderParam("token") String token){
+	public boolean isComissao(@HeaderParam("token") String token){
 
-		String emailFormando = TokenAuthenticationService.getAuthentication(token);
-		if (emailFormando == null) {
+		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+		
+		if (emailAutenticado == null) {
 			return false;
-		}else {
-			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
-			return formando.isComissao();
 		}
+		
+		Formando formandoLogado = formandoService.getFormando(emailAutenticado);
+		return formandoLogado.isComissao();
 	}
+	
+	//usando service (medio) - mas ta mt confuso, precisa revisar
 	
 	@GET
 	@Path("/convites")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json; charset=UTF-8")
 	public List<Object> convites(@HeaderParam("token") String token) {
-		String emailFormando = TokenAuthenticationService.getAuthentication(token);
-		if (emailFormando == null) {
-			System.out.println("Algo errado");
+		
+		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+		
+		if (emailAutenticado == null) {
 			return null;
-		}else {
-			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+		} else {
+			Formando formandoLogado = formandoService.getFormando(emailAutenticado);
 			
-			List<Convite> convites = conviteRepositorio.findConviteByFormando(formando.getId());
+			List<Convite> convites = conviteRepositorio.findConviteByFormando(formandoLogado.getId());
 			List<Object> convitesDoFormando = new ArrayList<Object>();
 			for(int i = 0 ; i < convites.size(); i++) {
 				Convite convite = convites.get(i);
