@@ -57,15 +57,14 @@ public class FormandoController {
 			if(formandoService.logar(email, senha))
 				token = TokenAuthenticationService.addAuthentication(email);
 		} catch (NegocioException e) {
-			return Response.status(202).header("erro", "Erro: " + e.getMessage()).build();
+			return Response.status(202).header("erro", e.getMessage()).build();
 		}
 		
 		return Response.status(201).header("token", token).build();	
 	}
 	
 	
-	/* USANDO O SERVICE */
-	
+	/* USANDO O SERVICE */	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/registrar")
@@ -81,7 +80,7 @@ public class FormandoController {
 		try {
 			formandoService.adicionar(novoFormando);
 		} catch (NegocioException e) {
-			return Response.status(202).header("erro", "Erro: " + e.getMessage()).build();
+			return Response.status(202).header("erro", e.getMessage()).build();
 		}
 		
 		return Response.status(201).build();
@@ -94,7 +93,7 @@ public class FormandoController {
 	public Response aceitarConvite(@HeaderParam("token") String token,@FormParam("id") int id,@FormParam("idConvite") int idConvite) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			//condi��o caso o token seja inv�lido
+			//condicao caso o token seja invalido
 			return null;
 		}else {
 			Turma turma = turmaRepositorio.findTurmaById(id);
@@ -119,7 +118,7 @@ public class FormandoController {
 	public Response recusarConvite(@HeaderParam("token") String token,@FormParam("id") int id,@FormParam("idConvite") int idConvite) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			//condi��o caso o token seja inv�lido
+			//condicao caso o token seja invalido
 			return null;
 		}else {
 			Turma turma = turmaRepositorio.findTurmaById(id);

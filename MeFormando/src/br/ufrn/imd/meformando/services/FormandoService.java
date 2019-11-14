@@ -31,10 +31,16 @@ public class FormandoService {
 	@Inject
 	private TurmaRepositorio turmaRepository;
 
+	/*! Valida dados de formando enviados por parametro de acordo com as regras de negocio, 
+	 * para depois solicitar ao repositorio que o adicione
+	 * 
+	 * @param formando Objeto que representa o novo Formando a ser inserido
+	 * @return O formando inserido
+	 * */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Formando adicionar(Formando formando) throws NegocioException {
-		// verificar se o formando com email passado existe
-		Formando formandoDB = formandoRepository.findFormandoByEmail(formando.getEmail());
+		
+		Formando formandoDB;
 
 		// verifica se ha campos vazios
 		if (
@@ -46,43 +52,69 @@ public class FormandoService {
 				formando.getCpf() == null || 
 				formando.getEmail() == null || 
 				formando.getSenha() == null
-			)
-			throw new NegocioException("Todos o campos sao obrigatorios");
+			) throw new NegocioException("Todos o campos sao obrigatorios");
+		
+		// valida o cpf e adiciona mascara
+		if (!ValidaCPF.isCPF(formando.getCpf()))
+			throw new NegocioException("CPF informado invalido");
+		else
+			formando.setCpf(ValidaCPF.mascararCPF(formando.getCpf()));
+		
+		// valida formato do email
+		if (!ValidaEmail.isEmailValido(formando.getEmail()))
+			throw new NegocioException("E-mail informado invalido");
 		
 		// verifica senha valida
 		if(formando.getSenha().length() < 8)
 			throw new NegocioException("A senha deve conter no minimo 8 caracteres");
 		
-		// valida email unico
+		// valida cpf unico
+		formandoDB = formandoRepository.findFormandoByCPF(formando.getCpf());
 		if (formandoDB != null)
-			throw new NegocioException("Ja possuimos este e-mail cadastrado no sistema");
-
-		// valida formato do email
-		if (!ValidaEmail.isEmailValido(formando.getEmail()))
-			throw new NegocioException("E-mail informado invalido");
-
-		// valida o cpf
-		if (!ValidaCPF.isCPF(formando.getCpf()))
-			throw new NegocioException("CPF informado invalido");
-
-		formando.setCpf(ValidaCPF.mascararCPF(formando.getCpf()));
+			throw new NegocioException("Ja usuario com este CPF cadastrado");
+		
+		// valida email unico
+		formandoDB = formandoRepository.findFormandoByEmail(formando.getEmail());
+		if (formandoDB != null)
+			throw new NegocioException("Ja possuimos usuario com este e-mail cadastrado");
+		
 		formandoRepository.adicionar(formando);
 		return formando;
 	}
-
+	
+	/*!
+	 * Solicita ao repositorio que exclua o formando do banco de dados
+	 * */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void remover(Formando formando) {
 		formandoRepository.remover(formando);
 	}
 
+	/*!
+	 * Solicita ao repositorio todos os formandos salvos no banco de dados
+	 * */
 	public List<Formando> listar() {
 		return formandoRepository.listar();
 	}
 
+	/*!
+	 * Solicita ao repositorio um formando com determinado email salvo no banco de dados
+	 * 
+	 * @param email Chave da busca do formando
+	 * @return Formando encontrado, null caso contrario
+	 * */
 	public Formando getFormando(String email) {
 		return formandoRepository.findFormandoByEmail(email);
 	}
 
+	/*!
+	 * Verifica se ha formando com email e senha informado no banco de dados
+	 * Solicita ao repositorio um formando com determinado email salvo no banco de dados
+	 * 
+	 * @param email Primeira chave da busca do formando
+	 * @param senha Segunda chave da busca do formando
+	 * @return true se email e senhas sao validas, false se nao
+	 * */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean logar(String email, String senha) throws NegocioException {
 

@@ -54,5 +54,16 @@ public class FormandoRepositorio {
 			return null;
 		}
 	}
+	
+	public Formando findFormandoByCPF(String cpf) {
+		try {
+			String jpaql ="select f from Formando f where f.cpf = :cpf";
+			Query q = em.createQuery(jpaql);
+			q.setParameter("cpf", cpf);
+			return (Formando) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 
 }

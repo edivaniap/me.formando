@@ -3,6 +3,7 @@ package br.ufrn.imd.meformando.dominio;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,10 +24,17 @@ public class Formando {
 	private int id;
 	
 	private String nome;
+	
+	@Column(unique = true)
 	private String cpf;
+	
+	@Column(unique = true)
 	private String email;
+	
 	private String senha;
+	
 	private boolean confirmadoTurma;
+	
 	private boolean isComissao;
 	
 	@ManyToOne
