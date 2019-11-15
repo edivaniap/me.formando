@@ -1,4 +1,4 @@
-package br.ufrn.imd.meformando.filtros;
+package br.ufrn.imd.meformando.filters;
 
 import java.io.IOException;
 

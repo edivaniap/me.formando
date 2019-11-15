@@ -20,10 +20,10 @@ import javax.ws.rs.core.Response;
 import br.ufrn.imd.meformando.dominio.Convite;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
-import br.ufrn.imd.meformando.exceptions.NegocioException;
-import br.ufrn.imd.meformando.repositorios.ConviteRepositorio;
-import br.ufrn.imd.meformando.repositorios.FormandoRepositorio;
-import br.ufrn.imd.meformando.repositorios.TurmaRepositorio;
+import br.ufrn.imd.meformando.exceptions.BusinessException;
+import br.ufrn.imd.meformando.repositories.ConviteRepository;
+import br.ufrn.imd.meformando.repositories.FormandoRepository;
+import br.ufrn.imd.meformando.repositories.TurmaRepository;
 import br.ufrn.imd.meformando.services.FormandoService;
 import br.ufrn.imd.meformando.util.CryptService;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
@@ -33,13 +33,13 @@ import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 public class FormandoController {
 	
 	@Inject
-	private FormandoRepositorio formandoRepositorio;
+	private FormandoRepository formandoRepository;
 	
 	@Inject 
-	private TurmaRepositorio turmaRepositorio;
+	private TurmaRepository turmaRepository;
 	
 	@Inject 
-	private ConviteRepositorio conviteRepositorio;
+	private ConviteRepository conviteRepository;
 	
 	@EJB
 	private FormandoService formandoService;
@@ -56,7 +56,7 @@ public class FormandoController {
 		try {
 			if(formandoService.logar(email, senha))
 				token = TokenAuthenticationService.addAuthentication(email);
-		} catch (NegocioException e) {
+		} catch (BusinessException e) {
 			return Response.status(202).header("erro", e.getMessage()).build();
 		}
 		
@@ -79,7 +79,7 @@ public class FormandoController {
 		
 		try {
 			formandoService.adicionar(novoFormando);
-		} catch (NegocioException e) {
+		} catch (BusinessException e) {
 			return Response.status(202).header("erro", e.getMessage()).build();
 		}
 		
@@ -96,15 +96,15 @@ public class FormandoController {
 			//condicao caso o token seja invalido
 			return null;
 		}else {
-			Turma turma = turmaRepositorio.findTurmaById(id);
+			Turma turma = turmaRepository.findTurmaById(id);
 			if(turma != null) {
-				Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+				Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
 				formando.setConfirmadoTurma(true);
 				formando.setTurma(turma);
-				formandoRepositorio.alterar(formando);
+				formandoRepository.alterar(formando);
 				
-				Convite convite = conviteRepositorio.findConviteById(idConvite);
-				conviteRepositorio.remover(convite);
+				Convite convite = conviteRepository.findConviteById(idConvite);
+				conviteRepository.remover(convite);
 				return Response.status(201).build();
 			}
 	
@@ -121,10 +121,10 @@ public class FormandoController {
 			//condicao caso o token seja invalido
 			return null;
 		}else {
-			Turma turma = turmaRepositorio.findTurmaById(id);
+			Turma turma = turmaRepository.findTurmaById(id);
 			if(turma != null) {
-				Convite convite = conviteRepositorio.findConviteById(idConvite);
-				conviteRepositorio.remover(convite);
+				Convite convite = conviteRepository.findConviteById(idConvite);
+				conviteRepository.remover(convite);
 				return Response.status(201).build();
 			}
 			
@@ -179,11 +179,11 @@ public class FormandoController {
 		} else {
 			Formando formandoLogado = formandoService.getFormando(emailAutenticado);
 			
-			List<Convite> convites = conviteRepositorio.findConviteByFormando(formandoLogado.getId());
+			List<Convite> convites = conviteRepository.findConviteByFormando(formandoLogado.getId());
 			List<Object> convitesDoFormando = new ArrayList<Object>();
 			for(int i = 0 ; i < convites.size(); i++) {
 				Convite convite = convites.get(i);
-				Turma turma = turmaRepositorio.findTurmaById(convite.getIdDaTurma());
+				Turma turma = turmaRepository.findTurmaById(convite.getIdDaTurma());
 				convitesDoFormando.add(Arrays.asList(turma.getTitulo(),convite.getFormandoQueConvidou(),turma.getId(),convite.getId()));
 				
 			}

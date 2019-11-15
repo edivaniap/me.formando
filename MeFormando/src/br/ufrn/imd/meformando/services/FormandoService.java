@@ -11,10 +11,10 @@ import javax.ws.rs.core.Response;
 import br.ufrn.imd.meformando.dominio.Convite;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
-import br.ufrn.imd.meformando.exceptions.NegocioException;
-import br.ufrn.imd.meformando.repositorios.ConviteRepositorio;
-import br.ufrn.imd.meformando.repositorios.FormandoRepositorio;
-import br.ufrn.imd.meformando.repositorios.TurmaRepositorio;
+import br.ufrn.imd.meformando.exceptions.BusinessException;
+import br.ufrn.imd.meformando.repositories.ConviteRepository;
+import br.ufrn.imd.meformando.repositories.FormandoRepository;
+import br.ufrn.imd.meformando.repositories.TurmaRepository;
 import br.ufrn.imd.meformando.util.CryptService;
 import br.ufrn.imd.meformando.util.ValidaCPF;
 import br.ufrn.imd.meformando.util.ValidaEmail;
@@ -23,13 +23,13 @@ import br.ufrn.imd.meformando.util.ValidaEmail;
 public class FormandoService {
 
 	@Inject
-	private FormandoRepositorio formandoRepository;
+	private FormandoRepository formandoRepository;
 
 	@Inject
-	private ConviteRepositorio conviteRepository;
+	private ConviteRepository conviteRepository;
 
 	@Inject
-	private TurmaRepositorio turmaRepository;
+	private TurmaRepository turmaRepository;
 
 	/*! Valida dados de formando enviados por parametro de acordo com as regras de negocio, 
 	 * para depois solicitar ao repositorio que o adicione
@@ -38,7 +38,7 @@ public class FormandoService {
 	 * @return O formando inserido
 	 * */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public Formando adicionar(Formando formando) throws NegocioException {
+	public Formando adicionar(Formando formando) throws BusinessException {
 		
 		Formando formandoDB;
 
@@ -52,31 +52,31 @@ public class FormandoService {
 				formando.getCpf() == null || 
 				formando.getEmail() == null || 
 				formando.getSenha() == null
-			) throw new NegocioException("Todos o campos sao obrigatorios");
+			) throw new BusinessException("Todos o campos sao obrigatorios");
 		
 		// valida o cpf e adiciona mascara
 		if (!ValidaCPF.isCPF(formando.getCpf()))
-			throw new NegocioException("CPF informado invalido");
+			throw new BusinessException("CPF informado invalido");
 		else
 			formando.setCpf(ValidaCPF.mascararCPF(formando.getCpf()));
 		
 		// valida formato do email
 		if (!ValidaEmail.isEmailValido(formando.getEmail()))
-			throw new NegocioException("E-mail informado invalido");
+			throw new BusinessException("E-mail informado invalido");
 		
 		// verifica senha valida
 		if(formando.getSenha().length() < 8)
-			throw new NegocioException("A senha deve conter no minimo 8 caracteres");
+			throw new BusinessException("A senha deve conter no minimo 8 caracteres");
 		
 		// valida cpf unico
 		formandoDB = formandoRepository.findFormandoByCPF(formando.getCpf());
 		if (formandoDB != null)
-			throw new NegocioException("Ja usuario com este CPF cadastrado");
+			throw new BusinessException("Ja usuario com este CPF cadastrado");
 		
 		// valida email unico
 		formandoDB = formandoRepository.findFormandoByEmail(formando.getEmail());
 		if (formandoDB != null)
-			throw new NegocioException("Ja possuimos usuario com este e-mail cadastrado");
+			throw new BusinessException("Ja possuimos usuario com este e-mail cadastrado");
 		
 		formandoRepository.adicionar(formando);
 		return formando;
@@ -116,14 +116,14 @@ public class FormandoService {
 	 * @return true se email e senhas sao validas, false se nao
 	 * */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public boolean logar(String email, String senha) throws NegocioException {
+	public boolean logar(String email, String senha) throws BusinessException {
 
 		Formando formandoDB = formandoRepository.findFormandoByEmail(email);
 
 		if (formandoDB == null)
-			throw new NegocioException("Este e-email nao esta cadastrado no nosso sistema");
+			throw new BusinessException("Este e-email nao esta cadastrado no nosso sistema");
 		else if (!CryptService.verifyPasswords(senha, formandoDB.getSenha()))
-			throw new NegocioException("Senha incorreta");
+			throw new BusinessException("Senha incorreta");
 
 		return CryptService.verifyPasswords(senha, formandoDB.getSenha());
 	}

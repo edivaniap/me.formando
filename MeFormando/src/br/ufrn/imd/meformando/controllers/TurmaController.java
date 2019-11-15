@@ -19,8 +19,8 @@ import javax.ws.rs.core.Response;
 import br.ufrn.imd.meformando.dominio.Convite;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
-import br.ufrn.imd.meformando.repositorios.FormandoRepositorio;
-import br.ufrn.imd.meformando.repositorios.TurmaRepositorio;
+import br.ufrn.imd.meformando.repositories.FormandoRepository;
+import br.ufrn.imd.meformando.repositories.TurmaRepository;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
 @Stateless
@@ -28,10 +28,10 @@ import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 public class TurmaController {
 	
 	@Inject
-	private FormandoRepositorio formandoRepositorio;
+	private FormandoRepository formandoRepository;
 	
 	@Inject 
-	private TurmaRepositorio turmaRepositorio;
+	private TurmaRepository turmaRepository;
 	
 	@GET
 	@Path("/turma")
@@ -40,10 +40,10 @@ public class TurmaController {
 	public List<Object> turmas(@HeaderParam("token") String token) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			//condição caso o token seja inválido
+			//condiï¿½ï¿½o caso o token seja invï¿½lido
 			return null;
 		}else {
-			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+			Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
 			return Arrays.asList(formando.isConfirmadoTurma());
 		}
 	}
@@ -55,11 +55,11 @@ public class TurmaController {
 	public List<Object> formandos(@HeaderParam("token") String token) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			//condição caso o token seja inválido
+			//condiï¿½ï¿½o caso o token seja invï¿½lido
 			return null;
 		}else {
-			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
-			Turma turma = turmaRepositorio.findTurmaByFormando(formando);
+			Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
+			Turma turma = turmaRepository.findTurmaByFormando(formando);
 			List<Formando> formandos = turma.getFormandos();
 			List<Object> formandosDaTurma = new ArrayList<Object>();
 			for(int i = 0; i < formandos.size(); i++) {
@@ -85,18 +85,18 @@ public class TurmaController {
 				System.out.print(emailFormando);
 				return Response.status(202).build();
 			}else {
-				Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+				Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
 
 				Turma novaTurma = new Turma(titulo,instituicao,anoFormacao,semestreFormacao,curso);
 				formando.setComissao(true);
 				formando.setTurma(novaTurma);
 				formando.setConfirmadoTurma(true);
-				formandoRepositorio.alterar(formando);
+				formandoRepository.alterar(formando);
 				ArrayList<Formando> formandos = new ArrayList<Formando>();
 				formandos.add(formando);
 				novaTurma.setFormandos(formandos);
 				novaTurma.setQtdFormandos(1);
-				turmaRepositorio.adicionar(novaTurma);
+				turmaRepository.adicionar(novaTurma);
 				return Response.status(201).build();
 			
 			}
@@ -117,17 +117,17 @@ public class TurmaController {
 				System.out.print(emailFormando);
 				return Response.status(202).build();
 			}else {
-				Formando formandoConvidado = formandoRepositorio.findFormandoByEmail(email);
+				Formando formandoConvidado = formandoRepository.findFormandoByEmail(email);
 				if(formandoConvidado == null) {
 					return Response.status(203).build();
 				}else {
-						Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
-						Turma turma = turmaRepositorio.findTurmaByFormando(formando);
+						Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
+						Turma turma = turmaRepository.findTurmaByFormando(formando);
 						Convite convite = new Convite(turma.getId(),formando.getNome(),formandoConvidado);
 						List<Convite> convites = formandoConvidado.getConvites();
 						convites.add(convite);
 						formandoConvidado.setConvites(convites);
-						formandoRepositorio.alterar(formandoConvidado);
+						formandoRepository.alterar(formandoConvidado);
 				}
 
 				return Response.status(201).build();

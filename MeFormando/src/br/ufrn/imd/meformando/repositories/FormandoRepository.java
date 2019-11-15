@@ -1,4 +1,4 @@
-package br.ufrn.imd.meformando.repositorios;
+package br.ufrn.imd.meformando.repositories;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.util.CryptService;
 
 @Stateless
-public class FormandoRepositorio {
+public class FormandoRepository {
 
 	@PersistenceContext
 	private EntityManager em;

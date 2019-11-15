@@ -1,4 +1,4 @@
-package br.ufrn.imd.meformando.repositorios;
+package br.ufrn.imd.meformando.repositories;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import br.ufrn.imd.meformando.dominio.EventoComemoracao;
 
 
 @Stateless
-public class EventoComemoracaoRepositorio {
+public class EventoRepository {
 
 	@PersistenceContext
 	private EntityManager em;

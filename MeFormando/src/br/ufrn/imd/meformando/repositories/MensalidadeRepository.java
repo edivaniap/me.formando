@@ -1,4 +1,4 @@
-package br.ufrn.imd.meformando.repositorios;
+package br.ufrn.imd.meformando.repositories;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 import br.ufrn.imd.meformando.dominio.Mensalidade;
 
 @Stateless
-public class MensalidadeRepositorio {
+public class MensalidadeRepository {
 
 	@PersistenceContext
 	private EntityManager em;

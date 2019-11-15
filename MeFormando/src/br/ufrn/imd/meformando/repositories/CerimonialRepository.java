@@ -1,4 +1,4 @@
-package br.ufrn.imd.meformando.repositorios;
+package br.ufrn.imd.meformando.repositories;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import br.ufrn.imd.meformando.dominio.Cerimonial;
 
 
 @Stateless
-public class CerimonialRepositorio {
+public class CerimonialRepository {
 
 	@PersistenceContext
 	private EntityManager em;
