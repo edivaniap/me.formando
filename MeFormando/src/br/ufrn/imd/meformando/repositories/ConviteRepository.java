@@ -1,4 +1,4 @@
-package br.ufrn.imd.meformando.repositorios;
+package br.ufrn.imd.meformando.repositories;
 
 import java.util.List;
 import javax.ejb.Stateless;
@@ -11,7 +11,7 @@ import br.ufrn.imd.meformando.dominio.Convite;
 
 
 @Stateless
-public class ConviteRepositorio {
+public class ConviteRepository {
 	
 	@PersistenceContext
 	private EntityManager em;

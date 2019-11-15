@@ -1,4 +1,4 @@
-package br.ufrn.imd.meformando.repositorios;
+package br.ufrn.imd.meformando.repositories;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.util.CryptService;
 
 @Stateless
-public class FormandoRepositorio {
+public class FormandoRepository {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -49,6 +49,17 @@ public class FormandoRepositorio {
 			String jpaql ="select f from Formando f where f.email = :email";
 			Query q = em.createQuery(jpaql);
 			q.setParameter("email", email);
+			return (Formando) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	public Formando findFormandoByCPF(String cpf) {
+		try {
+			String jpaql ="select f from Formando f where f.cpf = :cpf";
+			Query q = em.createQuery(jpaql);
+			q.setParameter("cpf", cpf);
 			return (Formando) q.getSingleResult();
 		} catch (NoResultException e) {
 			return null;

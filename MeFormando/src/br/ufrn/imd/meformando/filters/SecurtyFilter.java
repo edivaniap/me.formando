@@ -1,4 +1,4 @@
-package br.ufrn.imd.meformando.filtros;
+package br.ufrn.imd.meformando.filters;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
 
 @WebFilter("/pages/*")
-public class FiltroSeguranca implements Filter{
+public class SecurtyFilter implements Filter{
 
 	public void doFilter(ServletRequest request, ServletResponse response, 
 			FilterChain chain)
@@ -30,7 +30,7 @@ public class FiltroSeguranca implements Filter{
 		String path = req.getRequestURI().substring(req.getContextPath().length()).replaceAll("[/]+$", "");
 		
 		if (email == null && !path.equals("/usuario/logar") && !path.equals("/usuario/registrar"))
-			//envia um erro de autorizaçao
+			//envia um erro de autorizaï¿½ao
 			res.sendError(401);
 		else 
 			chain.doFilter(request, response);

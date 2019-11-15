@@ -21,9 +21,9 @@ import br.ufrn.imd.meformando.dominio.Cerimonial;
 import br.ufrn.imd.meformando.dominio.EventoComemoracao;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
-import br.ufrn.imd.meformando.repositorios.CerimonialRepositorio;
-import br.ufrn.imd.meformando.repositorios.FormandoRepositorio;
-import br.ufrn.imd.meformando.repositorios.TurmaRepositorio;
+import br.ufrn.imd.meformando.repositories.CerimonialRepository;
+import br.ufrn.imd.meformando.repositories.FormandoRepository;
+import br.ufrn.imd.meformando.repositories.TurmaRepository;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
 @Stateless
@@ -31,13 +31,13 @@ import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 public class CerimonialController {
 
 	@Inject
-	private FormandoRepositorio formandoRepositorio;
+	private FormandoRepository formandoRepository;
 	
 	@Inject
-	private CerimonialRepositorio cerimonialRepositorio;
+	private CerimonialRepository cerimonialRepository;
 	
 	@Inject 
-	private TurmaRepositorio turmaRepositorio;
+	private TurmaRepository turmaRepository;
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -49,12 +49,12 @@ public class CerimonialController {
 			if (emailFormando == null) {
 				return Response.status(202).build();
 			}else {
-				Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+				Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
 				Cerimonial cerimonial = new Cerimonial(nome,custo,descricao);
-				Turma atualizarTurma = turmaRepositorio.findTurmaByFormando(formando);
+				Turma atualizarTurma = turmaRepository.findTurmaByFormando(formando);
 				atualizarTurma.setCerimonial(cerimonial);
-				turmaRepositorio.alterar(atualizarTurma);			
-				cerimonialRepositorio.adicionar(cerimonial);
+				turmaRepository.alterar(atualizarTurma);			
+				cerimonialRepository.adicionar(cerimonial);
 				return Response.status(201).build();
 			
 			}
@@ -71,16 +71,16 @@ public class CerimonialController {
 			if (emailFormando == null) {
 				return Response.status(202).build();
 			}else {
-				Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+				Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
 				
-				Turma atualizarTurma = turmaRepositorio.findTurmaByFormando(formando);
+				Turma atualizarTurma = turmaRepository.findTurmaByFormando(formando);
 				Cerimonial cerimonial = atualizarTurma.getCerimonial();
 				cerimonial.setNome(nome);
 				cerimonial.setCusto(custo);
 				cerimonial.setDescricao(descricao);
 				atualizarTurma.setCerimonial(cerimonial);
-				turmaRepositorio.alterar(atualizarTurma);			
-				cerimonialRepositorio.alterar(cerimonial);
+				turmaRepository.alterar(atualizarTurma);			
+				cerimonialRepository.alterar(cerimonial);
 				return Response.status(201).build();
 			
 			}
@@ -93,11 +93,11 @@ public class CerimonialController {
 	public List<Object> eventos(@HeaderParam("token") String token) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			//condição caso o token seja inválido
+			//condiï¿½ï¿½o caso o token seja invï¿½lido
 			return null;
 		}else {
-			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
-			Turma turma = turmaRepositorio.findTurmaByFormando(formando);
+			Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
+			Turma turma = turmaRepository.findTurmaByFormando(formando);
 			Cerimonial cerimonial = turma.getCerimonial();
 			if(cerimonial != null) {
 				List<EventoComemoracao> eventos = cerimonial.getEventosComemoracoes();
@@ -122,11 +122,11 @@ public class CerimonialController {
 	public List<Object> cerimonial(@HeaderParam("token") String token) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			//condição caso o token seja inválido
+			//condiï¿½ï¿½o caso o token seja invï¿½lido
 			return null;
 		}else {
-			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
-			Turma turma = turmaRepositorio.findTurmaByFormando(formando);
+			Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
+			Turma turma = turmaRepository.findTurmaByFormando(formando);
 			Cerimonial cerimonial = turma.getCerimonial();
 			if(cerimonial != null) {
 				
@@ -153,7 +153,7 @@ public class CerimonialController {
 			return false;
 		}else {
 
-			Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
+			Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
 			if(formando.getTurma() == null) {
 
 				return false;

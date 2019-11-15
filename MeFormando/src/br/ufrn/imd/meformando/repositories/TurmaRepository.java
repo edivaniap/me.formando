@@ -1,4 +1,4 @@
-package br.ufrn.imd.meformando.repositorios;
+package br.ufrn.imd.meformando.repositories;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -11,7 +11,7 @@ import br.ufrn.imd.meformando.dominio.Turma;
 
 
 @Stateless
-public class TurmaRepositorio {
+public class TurmaRepository {
 	
 	@PersistenceContext
 	private EntityManager em;

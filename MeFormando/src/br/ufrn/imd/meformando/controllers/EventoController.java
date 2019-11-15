@@ -25,10 +25,10 @@ import br.ufrn.imd.meformando.dominio.Cerimonial;
 import br.ufrn.imd.meformando.dominio.EventoComemoracao;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
-import br.ufrn.imd.meformando.repositorios.CerimonialRepositorio;
-import br.ufrn.imd.meformando.repositorios.EventoComemoracaoRepositorio;
-import br.ufrn.imd.meformando.repositorios.FormandoRepositorio;
-import br.ufrn.imd.meformando.repositorios.TurmaRepositorio;
+import br.ufrn.imd.meformando.repositories.CerimonialRepository;
+import br.ufrn.imd.meformando.repositories.EventoRepository;
+import br.ufrn.imd.meformando.repositories.FormandoRepository;
+import br.ufrn.imd.meformando.repositories.TurmaRepository;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
 @Stateless
@@ -36,16 +36,16 @@ import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 public class EventoController {
 
 	@Inject
-	private FormandoRepositorio formandoRepositorio;
+	private FormandoRepository formandoRepository;
 	
 	@Inject
-	private CerimonialRepositorio cerimonialRepositorio;
+	private CerimonialRepository cerimonialRepository;
 	
 	@Inject 
-	private EventoComemoracaoRepositorio eventoComemoracaoRepositorio;
+	private EventoRepository eventoRepository;
 	
 	@Inject 
-	private TurmaRepositorio turmaRepositorio;
+	private TurmaRepository turmaRepository;
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -61,8 +61,8 @@ public class EventoController {
 
 				DateFormat formatter = new SimpleDateFormat("yy-MM-dd");
 				Date date = (Date)formatter.parse(data);
-				Formando formando = formandoRepositorio.findFormandoByEmail(emailFormando);
-				Turma turma = turmaRepositorio.findTurmaByFormando(formando);
+				Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
+				Turma turma = turmaRepository.findTurmaByFormando(formando);
 				Cerimonial cerimonial = turma.getCerimonial();
 				EventoComemoracao evento = new EventoComemoracao(titulo,custo,date,descricao);
 				evento.setCerimonial(cerimonial);
@@ -71,14 +71,14 @@ public class EventoController {
 					eventos = cerimonial.getEventosComemoracoes();
 					eventos.add(evento);
 					cerimonial.setEventosComemoracoes(eventos);
-					cerimonialRepositorio.alterar(cerimonial);
+					cerimonialRepository.alterar(cerimonial);
 				}else {
 					eventos = new ArrayList<EventoComemoracao>();
 					eventos.add(evento);
 					cerimonial.setEventosComemoracoes(eventos);
-					cerimonialRepositorio.alterar(cerimonial);
+					cerimonialRepository.alterar(cerimonial);
 				}
-				eventoComemoracaoRepositorio.adicionar(evento);
+				eventoRepository.adicionar(evento);
 				
 				return Response.status(201).build();
 			
@@ -101,12 +101,12 @@ public class EventoController {
 				
 				DateFormat formatter = new SimpleDateFormat("yy-MM-dd");
 				Date date = (Date)formatter.parse(data);
-				EventoComemoracao evento = eventoComemoracaoRepositorio.findEventoById(id);
+				EventoComemoracao evento = eventoRepository.findEventoById(id);
 				evento.setData(date);
 				evento.setTitulo(titulo);
 				evento.setCusto(custo);
 				evento.setDescricao(descricao);
-				eventoComemoracaoRepositorio.alterar(evento);				
+				eventoRepository.alterar(evento);				
 				return Response.status(201).build();
 			
 			}
@@ -123,7 +123,7 @@ public class EventoController {
 			return null;
 		}else {
 			
-			EventoComemoracao evento = eventoComemoracaoRepositorio.findEventoById(id);
+			EventoComemoracao evento = eventoRepository.findEventoById(id);
 			if(evento != null) {
 				List<Object> cerimonialEnviado = new ArrayList<Object>();							
 				cerimonialEnviado.add(Arrays.asList(evento.getTitulo(),evento.getDescricao(),evento.getData().toString(),evento.getCusto()));
