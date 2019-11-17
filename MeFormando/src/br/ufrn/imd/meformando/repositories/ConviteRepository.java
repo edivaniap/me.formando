@@ -44,8 +44,7 @@ public class ConviteRepository {
 			return resultList;
 		} catch (NoResultException e) {
 			return null;
-		}
-	
+		}	
 	}
 
 	public Convite findConviteById(int id) {

@@ -26,9 +26,11 @@ public class Convite {
 	@JoinColumn(name = "id_formando")
 	private Formando formando;
 	
+	private String status;
+	
 
 	public Convite() {
-		
+		this.status = "Aguardando Resposta";
 	}
 
 	public Convite(int idDaTurma, String formandoQueConvidou,Formando formando) {
@@ -36,6 +38,7 @@ public class Convite {
 		this.idDaTurma = idDaTurma;
 		this.formandoQueConvidou = formandoQueConvidou;
 		this.formando = formando;
+		this.status = "Aguardando Resposta";
 	}
 
 
@@ -63,10 +66,23 @@ public class Convite {
 		return id;
 	}
 
+	public Formando getFormando() {
+		return formando;
+	}
 
-	
-	
-	
-	
+	public void setFormando(Formando formando) {
+		this.formando = formando;
+	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 }
