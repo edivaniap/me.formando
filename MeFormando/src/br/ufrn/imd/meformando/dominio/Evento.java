@@ -2,10 +2,12 @@ package br.ufrn.imd.meformando.dominio;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -13,25 +15,27 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "eventoComemoracao")
-public class EventoComemoracao {
+@Table(name = "evento")
+public class Evento {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_EVENTOCOMEMORACAO")
 	@SequenceGenerator(name="SEQ_EVENTOCOMEMORACAO", sequenceName="id_seq_eventocomemoracao", allocationSize=1)
 	private int id;
 	
+	//@Column(unique = true)
 	private String titulo;
 	
 	private double custo;
 	
-	@Temporal(TemporalType.DATE)
+	//@Temporal(TemporalType.DATE)
 	private Date data;
 
 	private String descricao;
 	
 	
 	@ManyToOne
+	@JoinColumn(name = "id_cerimonial")
 	private Cerimonial cerimonial;
 	
 	public Cerimonial getCerimonial() {
@@ -46,13 +50,13 @@ public class EventoComemoracao {
 
 
 
-	public EventoComemoracao() {
+	public Evento() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	
 
-	public EventoComemoracao(String titulo, double custo, Date data, String descricao) {
+	public Evento(String titulo, double custo, Date data, String descricao) {
 		super();
 		this.titulo = titulo;
 		this.custo = custo;
@@ -110,7 +114,7 @@ public class EventoComemoracao {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EventoComemoracao other = (EventoComemoracao) obj;
+		Evento other = (Evento) obj;
 		if (id != other.id)
 			return false;
 		return true;

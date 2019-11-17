@@ -30,7 +30,7 @@ public class Cerimonial {
 	private String descricao;
 
 	@OneToMany(mappedBy = "cerimonial", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<EventoComemoracao> eventosComemoracoes;
+	private List<Evento> eventosComemoracoes;
 	
 	public Cerimonial() {
 		// TODO Auto-generated constructor stub
@@ -77,11 +77,11 @@ public class Cerimonial {
 		this.custo = custo;
 	}
 
-	public List<EventoComemoracao> getEventosComemoracoes() {
+	public List<Evento> getEventosComemoracoes() {
 		return eventosComemoracoes;
 	}
 
-	public void setEventosComemoracoes(List<EventoComemoracao> eventosComemoracoes) {
+	public void setEventosComemoracoes(List<Evento> eventosComemoracoes) {
 		this.eventosComemoracoes = eventosComemoracoes;
 	}
 

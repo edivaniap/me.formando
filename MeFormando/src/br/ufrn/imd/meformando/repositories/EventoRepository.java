@@ -9,49 +9,61 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import br.ufrn.imd.meformando.dominio.Cerimonial;
-import br.ufrn.imd.meformando.dominio.EventoComemoracao;
-
-
+import br.ufrn.imd.meformando.dominio.Evento;
 
 @Stateless
 public class EventoRepository {
 
 	@PersistenceContext
 	private EntityManager em;
-	
-	public EventoComemoracao adicionar(EventoComemoracao eventoComemoracao) {
-		if(eventoComemoracao.getId() == 0)
+
+	public Evento adicionar(Evento eventoComemoracao) {
+		if (eventoComemoracao.getId() == 0)
 			em.persist(eventoComemoracao);
 		else
 			em.merge(eventoComemoracao);
 		return eventoComemoracao;
 	}
-	
-	public EventoComemoracao alterar(EventoComemoracao eventoComemoracao) {
+
+	public Evento alterar(Evento eventoComemoracao) {
 		em.persist(eventoComemoracao);
 		return eventoComemoracao;
 	}
-	
-	public List<EventoComemoracao> findTurmaByComissao(Cerimonial cerimonial) {
+
+	public List<Evento> findTurmaByComissao(Cerimonial cerimonial) {
 		return cerimonial.getEventosComemoracoes();
 	}
-	
-	public void remover(EventoComemoracao eventoComemoracao) {
-		eventoComemoracao = em.find(EventoComemoracao.class, eventoComemoracao.getId());
+
+	public void remover(Evento eventoComemoracao) {
+		eventoComemoracao = em.find(Evento.class, eventoComemoracao.getId());
 		em.remove(eventoComemoracao);
 	}
-	
-	@SuppressWarnings("unchecked")
-	public List<EventoComemoracao> listar() {
-		return (List<EventoComemoracao>) em.createQuery("select e from EventoComemoracao e").getResultList();
-	}	
 
-	public EventoComemoracao findEventoById(int id) {
+	@SuppressWarnings("unchecked")
+	public List<Evento> listar() {
+		return (List<Evento>) em.createQuery("select e from Evento e").getResultList();
+	}
+
+	public Evento findEventoByTitulo(String titulo) {
 		try {
-			String jpaql ="select f from EventoComemoracao f where f.id = :id";
+			String jpaql = "select e from Evento e where e.titulo = :titulo";
 			Query q = em.createQuery(jpaql);
-			q.setParameter("id", id);
-			return (EventoComemoracao) q.getSingleResult();
+			q.setParameter("titulo", titulo);
+			return (Evento) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public Evento findEventoByTituloByCerimonial(String titulo,  Cerimonial cerimonial) {
+		try {
+			String jpaql = "SELECT e FROM Evento e WHERE e.cerimonial = :cerimonial AND e.titulo = :titulo";
+			Query q = em.createQuery(jpaql);
+	
+			q.setParameter("cerimonial", cerimonial);
+			q.setParameter("titulo", titulo);
+			
+			return (Evento) q.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
