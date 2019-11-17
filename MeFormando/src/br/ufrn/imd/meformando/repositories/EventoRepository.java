@@ -54,6 +54,17 @@ public class EventoRepository {
 			return null;
 		}
 	}
+	
+	public Evento findEventoById(int id) {
+		try {
+			String jpaql = "select e from Evento e where e.id = :id";
+			Query q = em.createQuery(jpaql);
+			q.setParameter("id", id);
+			return (Evento) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 
 	public Evento findEventoByTituloByCerimonial(String titulo,  Cerimonial cerimonial) {
 		try {

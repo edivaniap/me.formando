@@ -1,5 +1,7 @@
 package br.ufrn.imd.meformando.services;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -13,6 +15,7 @@ import br.ufrn.imd.meformando.repositories.EventoRepository;
 import br.ufrn.imd.meformando.repositories.FormandoRepository;
 import br.ufrn.imd.meformando.repositories.TurmaRepository;
 import br.ufrn.imd.meformando.util.ValidaCPF;
+import br.ufrn.imd.meformando.util.ValidaCusto;
 import br.ufrn.imd.meformando.util.ValidaData;
 import br.ufrn.imd.meformando.util.ValidaEmail;
 
@@ -50,6 +53,10 @@ public class EventoService {
 		if(evento.getCusto() <= 0.0) {
 			throw new BusinessException("Não é possível adicionar um custo com valor menor que 0 reais!");
 		}
+		
+		// valida custo
+		if (!ValidaCusto.isCustoValido(evento.getCusto()))
+				throw new BusinessException("Não é possivel adicionar custo com letra!");
 				
 		// valida titulo de evento unico
 		eventoDB = eventoRepository.findEventoByTituloByCerimonial(evento.getTitulo(), evento.getCerimonial());
@@ -60,6 +67,40 @@ public class EventoService {
 		
 		eventoRepository.adicionar(evento);
 		return evento;
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void alterar(Evento evento) {
+		eventoRepository.alterar(evento);
+	}
+	
+	/*!
+	 * Solicita ao repositorio que exclua o evento do banco de dados
+	 * */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void remover(Evento evento) {
+		eventoRepository.remover(evento);
+	}
+
+	/*!
+	 * Solicita ao repositorio todos os eventos salvos no banco de dados
+	 * */
+	public List<Evento> listar() {
+		return eventoRepository.listar();
+	}
+
+	/*!
+	 * Solicita ao repositorio um evento com determinado titulo salvo no banco de dados
+	 * 
+	 * @param titulo Chave da busca do evento
+	 * @return Evento encontrado, null caso contrario
+	 * */
+	public Evento getEvento(String titulo) {
+		return eventoRepository.findEventoByTitulo(titulo);
+	}
+	
+	public Evento getEventoId(int id) {
+		return eventoRepository.findEventoById(id);
 	}
 
 }

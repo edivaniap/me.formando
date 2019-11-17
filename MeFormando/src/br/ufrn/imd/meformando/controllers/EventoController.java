@@ -88,57 +88,60 @@ public class EventoController {
 			}
 	}
 
+	/*USANDO O SERVICE*/
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Path("/alterar")
+	public Response alterar(@HeaderParam("token") String token,@HeaderParam("id") int id, @FormParam("Titulo") String titulo, 
+			@FormParam("Custo") double custo, 
+			@FormParam("Date") String data,
+			@FormParam("Descricao") String descricao ) throws ParseException {
+
+			String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+			if (emailAutenticado == null) {
+			
+				return Response.status(202).build();
+			}else {
+				
+				DateFormat formatter = new SimpleDateFormat("yy-MM-dd");
+				Date date = (Date)formatter.parse(data);
+				
+				Evento evento = eventoService.getEventoId(id);
+				evento.setData(date);
+				evento.setTitulo(titulo);
+				evento.setCusto(custo);
+				evento.setDescricao(descricao);
+				
+				
+				eventoService.alterar(evento);
+				
+				return Response.status(201).build();
+			}
+
+	}
 	
-//	@POST
-//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//	@Path("/alterar")
-//	public Response alterar(@FormParam("Titulo") String titulo, 
-//			@FormParam("Custo") double custo, 
-//			@FormParam("Date") String data,
-//			@FormParam("Descricao") String descricao ) throws ParseException {
-//
-//			String emailFormando = TokenAuthenticationService.getAuthentication(token);
-//			if (emailFormando == null) {
-//			
-//				return Response.status(202).build();
-//			}else {
-//				
-//				DateFormat formatter = new SimpleDateFormat("yy-MM-dd");
-//				Date date = (Date)formatter.parse(data);
-//				Evento evento = eventoRepository.findEventoById(id);
-//				evento.setData(date);
-//				evento.setTitulo(titulo);
-//				evento.setCusto(custo);
-//				evento.setDescricao(descricao);
-//				eventoRepository.alterar(evento);				
-//				return Response.status(201).build();
-//			
-//			}
-//
-//	}
-//	
-//	@GET
-//	@Path("/eventoSelecionado")
-//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//	@Produces("application/json; charset=UTF-8")
-//	public List<Object> eventoSelecionado(@HeaderParam("token") String token,@HeaderParam("id") int id) {
-//		String emailFormando = TokenAuthenticationService.getAuthentication(token);
-//		if (emailFormando == null) {
-//			return null;
-//		}else {
-//			
-//			Evento evento = eventoRepository.findEventoById(id);
-//			if(evento != null) {
-//				List<Object> cerimonialEnviado = new ArrayList<Object>();							
-//				cerimonialEnviado.add(Arrays.asList(evento.getTitulo(),evento.getDescricao(),evento.getData().toString(),evento.getCusto()));
-//				return cerimonialEnviado;
-//			}else {
-//				System.out.println("Deu ruim!!!");
-//				return null;
-//			}
-//			
-//			
-//		}
-//	}
+	@GET
+	@Path("/eventoSelecionado")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces("application/json; charset=UTF-8")
+	public List<Object> eventoSelecionado(@HeaderParam("token") String token,@HeaderParam("id") int id) {
+		String emailFormando = TokenAuthenticationService.getAuthentication(token);
+		if (emailFormando == null) {
+			return null;
+		}else {
+			
+			Evento evento = eventoService.getEventoId(id);
+			if(evento != null) {
+				List<Object> cerimonialEnviado = new ArrayList<Object>();							
+				cerimonialEnviado.add(Arrays.asList(evento.getTitulo(),evento.getDescricao(),evento.getData().toString(),evento.getCusto()));
+				return cerimonialEnviado;
+			}else {
+				System.out.println("Deu ruim!!!");
+				return null;
+			}
+			
+			
+		}
+	}
 	
 }
