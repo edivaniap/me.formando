@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "formando")
 public class Formando {
@@ -39,12 +41,15 @@ public class Formando {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_turma")
+	@JsonIgnore
 	private Turma turma;
 	
 	@OneToMany(mappedBy = "formando", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private List<Mensalidade> mensalidades;
 	
 	@OneToMany(mappedBy = "formando", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private List<Convite> convites;
 
 	public List<Convite> getConvites() {

@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "turma")
 public class Turma {
@@ -35,13 +37,16 @@ public class Turma {
 	private int qtdFormandos;
 	
 	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private List<Formando> formandos;
 	
 	@ManyToOne
 	@JoinColumn(name="id_cerimonial")
+	@JsonIgnore
 	private Cerimonial cerimonial;
 	
 	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private List<ProjetoArrecadacao> projetosArrecadacoes;
 
 	public Turma() {
