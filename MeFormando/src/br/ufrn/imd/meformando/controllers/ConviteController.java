@@ -1,7 +1,5 @@
 package br.ufrn.imd.meformando.controllers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -16,9 +14,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.ufrn.imd.meformando.dominio.Convite;
-import br.ufrn.imd.meformando.dominio.Formando;
-import br.ufrn.imd.meformando.dominio.Turma;
 import br.ufrn.imd.meformando.exceptions.BusinessException;
 import br.ufrn.imd.meformando.services.ConviteService;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
@@ -30,8 +25,29 @@ public class ConviteController {
 	@EJB
 	private ConviteService conviteService;
 	
-	/* USANDO O SERVICE */
-	// em andamento. e esta mt confuso, precisa revisar classe convite
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Path("/convidar")
+	public Response convidar(@HeaderParam("token") String token,@FormParam("Email") String email) {
+		if(token == null || token == "") {
+			return Response.status(203).header("erro", "Token vazio ou null").build();
+		}
+
+		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+		if (emailAutenticado == null) {
+			return Response.status(202).header("erro", "Nao foi possivel encontrar o Formando atraves do Token").build();
+		}else {
+			try {
+				conviteService.convidar(email, emailAutenticado);
+			} catch (BusinessException be) {
+				return Response.status(202).header("erro", be.getMessage()).build();
+			} catch (Exception e) {
+				return Response.status(202).header("erro", e.getMessage()).build();
+			}
+		}
+		return Response.status(201).build();
+	}
+
 	@GET
 	@Path("/por_convidado")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -79,5 +95,4 @@ public class ConviteController {
 			return Response.status(202).header("erro", e.getMessage()).build();
 		}
 	}
-	
 }

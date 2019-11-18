@@ -19,37 +19,34 @@ import br.ufrn.imd.meformando.repositories.TurmaRepository;
 
 @Stateless
 public class ConviteService {
-	
+
 	@Inject
 	private ConviteRepository conviteRepository;
-	
+
 	@Inject
 	private FormandoRepository formandoRepository;
-	
+
 	@Inject
 	private TurmaRepository turmaRepository;
-	
-	/* Solicita ao repositorio e retorna lista de convites buscados atravez do email do convidado */
+
+	/*
+	 * ! Solicita ao repositorio e retorna lista de convites buscados atravez do
+	 * email do convidado
+	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public List<Object> listarPorConvidado(String email_convidado) throws BusinessException {
-		
+
 		Formando convidado = formandoRepository.findFormandoByEmail(email_convidado);
 		List<Object> convitesDoFormando = new ArrayList<Object>();
-		
-		if(convidado != null) {
+
+		if (convidado != null) {
 			List<Convite> convites = conviteRepository.findConviteByFormando(convidado.getId());
-			if(convites != null) {
+			if (convites != null) {
 				for (Convite convite : convites) {
 					Turma turma = turmaRepository.findTurmaById(convite.getIdDaTurma());
-					
-					convitesDoFormando.add(
-							Arrays.asList(
-									turma.getTitulo(),
-									convite.getFormandoQueConvidou(),
-									turma.getId(),
-									convite.getId()
-									)
-							);
+
+					convitesDoFormando.add(Arrays.asList(turma.getTitulo(), convite.getFormandoQueConvidou(),
+							turma.getId(), convite.getId()));
 				}
 			} else {
 				throw new BusinessException("Nao existe convite para este formando");
@@ -57,7 +54,7 @@ public class ConviteService {
 		} else {
 			throw new BusinessException("Formando com email " + email_convidado + " nao existe");
 		}
-	
+
 		return convitesDoFormando;
 	}
 
@@ -80,14 +77,14 @@ public class ConviteService {
 			if (turma != null) {
 				if (convite != null) {
 					if (formando.getTurma() == null) {
-						
+
 						formando.setConfirmadoTurma(true);
 						formando.setTurma(turma);
 						formandoRepository.alterar(formando);
-						
+
 						convite.setStatus("Aceito");
 						conviteRepository.alterar(convite);
-					
+
 					} else {
 						throw new BusinessException("Formando com email " + email_formando + " ja esta em uma turma");
 					}
@@ -101,8 +98,8 @@ public class ConviteService {
 			throw new BusinessException("Formando com email " + email_formando + " nao existe");
 		}
 	}
-	
-	/* Seta status de convite para Recusado */
+
+	/* ! Seta status de convite para Recusado */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void recusar(String email_formando, int id_convite) throws BusinessException {
 		Formando formando = formandoRepository.findFormandoByEmail(email_formando);
@@ -110,14 +107,41 @@ public class ConviteService {
 
 		if (formando != null) {
 			if (convite != null) {
-				
+
 				convite.setStatus("Recusado");
 				conviteRepository.alterar(convite);
-				} else {
-					throw new BusinessException("Convite de ID " + id_convite + " nao existe");
-				}
+			} else {
+				throw new BusinessException("Convite de ID " + id_convite + " nao existe");
+			}
 		} else {
 			throw new BusinessException("Formando com email " + email_formando + " nao existe");
+		}
+	}
+
+	/* ! Convida formando para turma */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void convidar(String email_convidado, String email_convidante) throws BusinessException {
+		Formando formandoConvidado = formandoRepository.findFormandoByEmail(email_convidado);
+		if (formandoConvidado != null) {
+			if (formandoConvidado.getTurma() == null) {
+				Formando formando = formandoRepository.findFormandoByEmail(email_convidante);
+
+				List<Convite> convites = formandoConvidado.getConvites();
+
+				for (Convite c : convites) {
+					if (c.getIdDaTurma() == formando.getTurma().getId())
+						throw new BusinessException(email_convidado + " ja foi convidado para esta turma");
+				}
+				
+				Convite convite = new Convite(formando.getTurma().getId(), formando.getNome(), formandoConvidado);
+				convites.add(convite);
+				formandoConvidado.setConvites(convites);
+				formandoRepository.alterar(formandoConvidado);
+			} else {
+				throw new BusinessException(email_convidado + " ja esta em uma turma");
+			}
+		} else {
+			throw new BusinessException("Formando com email " + email_convidado + " nao existe");
 		}
 	}
 }
