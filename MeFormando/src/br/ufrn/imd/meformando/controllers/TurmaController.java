@@ -16,7 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.ufrn.imd.meformando.dominio.Convite;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
 import br.ufrn.imd.meformando.repositories.FormandoRepository;
@@ -102,41 +101,4 @@ public class TurmaController {
 			}
 
 	}
-	
-	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Path("/convidar")
-	public Response convidar(@HeaderParam("token") String token,@FormParam("Email") String email) {
-			
-			if(token == null || token == "") {
-				System.out.println("Token vazio");
-				return Response.status(203).build();
-			}
-			String emailFormando = TokenAuthenticationService.getAuthentication(token);
-			if (emailFormando == null) {
-				System.out.print(emailFormando);
-				return Response.status(202).build();
-			}else {
-				Formando formandoConvidado = formandoRepository.findFormandoByEmail(email);
-				if(formandoConvidado == null) {
-					return Response.status(203).build();
-				}else {
-						Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
-						Turma turma = turmaRepository.findTurmaByFormando(formando);
-						Convite convite = new Convite(turma.getId(),formando.getNome(),formandoConvidado);
-						List<Convite> convites = formandoConvidado.getConvites();
-						convites.add(convite);
-						formandoConvidado.setConvites(convites);
-						formandoRepository.alterar(formandoConvidado);
-				}
-
-				return Response.status(201).build();
-			
-			}
-
-
-	
-	}
-	
-	
 }
