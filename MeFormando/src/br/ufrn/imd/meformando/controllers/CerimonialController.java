@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.ufrn.imd.meformando.dominio.Cerimonial;
-import br.ufrn.imd.meformando.dominio.EventoComemoracao;
+import br.ufrn.imd.meformando.dominio.Evento;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
 import br.ufrn.imd.meformando.repositories.CerimonialRepository;
@@ -100,10 +100,10 @@ public class CerimonialController {
 			Turma turma = turmaRepository.findTurmaByFormando(formando);
 			Cerimonial cerimonial = turma.getCerimonial();
 			if(cerimonial != null) {
-				List<EventoComemoracao> eventos = cerimonial.getEventosComemoracoes();
+				List<Evento> eventos = cerimonial.getEventosComemoracoes();
 				List<Object> eventosDaTurma = new ArrayList<Object>();
 				for(int i = 0; i < eventos.size(); i++) {
-					EventoComemoracao evento = eventos.get(i);
+					Evento evento = eventos.get(i);
 					eventosDaTurma.add(Arrays.asList(evento.getTitulo(),evento.getDescricao(),evento.getData().toString(),evento.getId()));
 				}
 				return eventosDaTurma;
