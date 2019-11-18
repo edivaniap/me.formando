@@ -37,20 +37,17 @@ public class EventoService {
 			) throw new BusinessException("Todos o campos sao obrigatorios");
 		
 		//valida custo maior que 0.0
-		if(evento.getCusto() <= 0.0) {
+		if(evento.getCusto() <= 0.0)
 			throw new BusinessException("Nao eh possivel adicionar um custo com valor menor que 0 reais!");
-		}
 		
-		// valida custo
-		if (!ValidaCusto.isCustoValido(evento.getCusto()))
-				throw new BusinessException("N�o � possivel adicionar custo com letra!");
+		// valida custo - nao ta funcionando
+		//if (!ValidaCusto.isCustoValido(evento.getCusto()))
+		//		throw new BusinessException("Nao eh possivel adicionar custo com letra!");
 				
 		// valida titulo de evento unico
 		eventoDB = eventoRepository.findEventoByTituloByCerimonial(evento.getTitulo(), evento.getCerimonial());
 		if (eventoDB != null)
 			throw new BusinessException("Ja existe evento com esse titulo cadastrado");
-		
-		
 		
 		eventoRepository.adicionar(evento);
 		return evento;

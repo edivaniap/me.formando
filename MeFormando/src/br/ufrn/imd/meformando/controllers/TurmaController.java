@@ -25,28 +25,36 @@ import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 @Stateless
 @Path("/turma")
 public class TurmaController {
-	
+
 	@Inject
 	private FormandoRepository formandoRepository;
-	
-	@Inject 
+
+	@Inject
 	private TurmaRepository turmaRepository;
-	
+
 	@GET
-	@Path("/turma")
+	@Path("/por_formando")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json; charset=UTF-8")
-	public List<Object> turmas(@HeaderParam("token") String token) {
-		String emailFormando = TokenAuthenticationService.getAuthentication(token);
-		if (emailFormando == null) {
-			//condi��o caso o token seja inv�lido
+	public Object turmaPorFormando(@HeaderParam("token") String token) {
+		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+		if (emailAutenticado == null) {
 			return null;
-		}else {
-			Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
-			return Arrays.asList(formando.isConfirmadoTurma());
-		}
+		}	
+
+		Formando formando = formandoRepository.findFormandoByEmail(emailAutenticado);
+
+		return Arrays.asList(
+				formando.isConfirmadoTurma(),
+				formando.getTurma().getTitulo(),
+				formando.getTurma().getInstituicao(),
+				formando.getTurma().getCurso(),
+				formando.getTurma().getAnoFormacao(),
+				formando.getTurma().getSemestreFormacao(),
+				formando.getTurma().getQtdFormandos()
+				);
 	}
-	
+
 	@GET
 	@Path("/formandos")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -54,51 +62,52 @@ public class TurmaController {
 	public List<Object> formandos(@HeaderParam("token") String token) {
 		String emailFormando = TokenAuthenticationService.getAuthentication(token);
 		if (emailFormando == null) {
-			//condi��o caso o token seja inv�lido
+			// condi��o caso o token seja inv�lido
 			return null;
-		}else {
+		} else {
 			Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
 			Turma turma = turmaRepository.findTurmaByFormando(formando);
 			List<Formando> formandos = turma.getFormandos();
 			List<Object> formandosDaTurma = new ArrayList<Object>();
-			for(int i = 0; i < formandos.size(); i++) {
+			for (int i = 0; i < formandos.size(); i++) {
 				Formando formandoDaTurma = formandos.get(i);
-				formandosDaTurma.add(Arrays.asList(formandoDaTurma.getEmail(),formandoDaTurma.getNome(),formandoDaTurma.isComissao()));
+				formandosDaTurma.add(Arrays.asList(formandoDaTurma.getEmail(), formandoDaTurma.getNome(),
+						formandoDaTurma.isComissao()));
 			}
 			return formandosDaTurma;
 		}
 	}
-	
+
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/criar")
-	public Response criar(@HeaderParam("token") String token,@FormParam("Titulo") String titulo, @FormParam("Instituicao") String instituicao, 
-			@FormParam("AnoFormacao") int anoFormacao, 
-			@FormParam("SemestreFormacao") int semestreFormacao ,@FormParam("Curso") String curso) {
-			
-			if(token == null || token == "") {
-				return Response.status(203).build();
-			}
-			String emailFormando = TokenAuthenticationService.getAuthentication(token);
-			if (emailFormando == null) {
-				System.out.print(emailFormando);
-				return Response.status(202).build();
-			}else {
-				Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
+	public Response criar(@HeaderParam("token") String token, @FormParam("Titulo") String titulo,
+			@FormParam("Instituicao") String instituicao, @FormParam("AnoFormacao") int anoFormacao,
+			@FormParam("SemestreFormacao") int semestreFormacao, @FormParam("Curso") String curso) {
 
-				Turma novaTurma = new Turma(titulo,instituicao,anoFormacao,semestreFormacao,curso);
-				formando.setComissao(true);
-				formando.setTurma(novaTurma);
-				formando.setConfirmadoTurma(true);
-				formandoRepository.alterar(formando);
-				ArrayList<Formando> formandos = new ArrayList<Formando>();
-				formandos.add(formando);
-				novaTurma.setFormandos(formandos);
-				novaTurma.setQtdFormandos(1);
-				turmaRepository.adicionar(novaTurma);
-				return Response.status(201).build();
-			
-			}
+		if (token == null || token == "") {
+			return Response.status(203).build();
+		}
+		String emailFormando = TokenAuthenticationService.getAuthentication(token);
+		if (emailFormando == null) {
+			System.out.print(emailFormando);
+			return Response.status(202).build();
+		} else {
+			Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
+
+			Turma novaTurma = new Turma(titulo, instituicao, anoFormacao, semestreFormacao, curso);
+			formando.setComissao(true);
+			formando.setTurma(novaTurma);
+			formando.setConfirmadoTurma(true);
+			formandoRepository.alterar(formando);
+			ArrayList<Formando> formandos = new ArrayList<Formando>();
+			formandos.add(formando);
+			novaTurma.setFormandos(formandos);
+			novaTurma.setQtdFormandos(1);
+			turmaRepository.adicionar(novaTurma);
+			return Response.status(201).build();
+
+		}
 
 	}
 }
