@@ -1,12 +1,7 @@
 package br.ufrn.imd.meformando.controllers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -17,24 +12,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.ufrn.imd.meformando.dominio.Convite;
 import br.ufrn.imd.meformando.dominio.Formando;
-import br.ufrn.imd.meformando.dominio.Turma;
 import br.ufrn.imd.meformando.exceptions.BusinessException;
-import br.ufrn.imd.meformando.repositories.ConviteRepository;
-import br.ufrn.imd.meformando.repositories.TurmaRepository;
 import br.ufrn.imd.meformando.services.FormandoService;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
 @Stateless
 @Path("/usuario")
 public class FormandoController {
-		
-	@Inject 
-	private TurmaRepository turmaRepository;
-	
-	@Inject 
-	private ConviteRepository conviteRepository;
 	
 	@EJB
 	private FormandoService formandoService;

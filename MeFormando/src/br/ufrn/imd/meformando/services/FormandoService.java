@@ -6,15 +6,10 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.ws.rs.core.Response;
 
-import br.ufrn.imd.meformando.dominio.Convite;
 import br.ufrn.imd.meformando.dominio.Formando;
-import br.ufrn.imd.meformando.dominio.Turma;
 import br.ufrn.imd.meformando.exceptions.BusinessException;
-import br.ufrn.imd.meformando.repositories.ConviteRepository;
 import br.ufrn.imd.meformando.repositories.FormandoRepository;
-import br.ufrn.imd.meformando.repositories.TurmaRepository;
 import br.ufrn.imd.meformando.util.CryptService;
 import br.ufrn.imd.meformando.util.ValidaCPF;
 import br.ufrn.imd.meformando.util.ValidaEmail;

@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -22,15 +21,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.ufrn.imd.meformando.dominio.Cerimonial;
 import br.ufrn.imd.meformando.dominio.Evento;
 import br.ufrn.imd.meformando.dominio.Formando;
-import br.ufrn.imd.meformando.dominio.Turma;
 import br.ufrn.imd.meformando.exceptions.BusinessException;
-import br.ufrn.imd.meformando.repositories.CerimonialRepository;
-import br.ufrn.imd.meformando.repositories.EventoRepository;
-import br.ufrn.imd.meformando.repositories.FormandoRepository;
-import br.ufrn.imd.meformando.repositories.TurmaRepository;
 import br.ufrn.imd.meformando.services.EventoService;
 import br.ufrn.imd.meformando.services.FormandoService;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
@@ -38,18 +31,6 @@ import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 @Stateless
 @Path("/evento")
 public class EventoController {
-
-	@Inject
-	private FormandoRepository formandoRepository;
-	
-	@Inject
-	private CerimonialRepository cerimonialRepository;
-	
-	@Inject 
-	private EventoRepository eventoRepository;
-	
-	@Inject 
-	private TurmaRepository turmaRepository;
 	
 	@EJB
 	private EventoService eventoService;

@@ -8,25 +8,12 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import br.ufrn.imd.meformando.dominio.Evento;
-import br.ufrn.imd.meformando.dominio.Formando;
-import br.ufrn.imd.meformando.dominio.Turma;
 import br.ufrn.imd.meformando.exceptions.BusinessException;
 import br.ufrn.imd.meformando.repositories.EventoRepository;
-import br.ufrn.imd.meformando.repositories.FormandoRepository;
-import br.ufrn.imd.meformando.repositories.TurmaRepository;
-import br.ufrn.imd.meformando.util.ValidaCPF;
 import br.ufrn.imd.meformando.util.ValidaCusto;
-import br.ufrn.imd.meformando.util.ValidaData;
-import br.ufrn.imd.meformando.util.ValidaEmail;
 
 @Stateless
 public class EventoService {
-	
-	@Inject
-	private FormandoRepository formandoRepository;
-	
-	@Inject
-	private TurmaRepository turmaRepository;
 	
 	@Inject
 	private EventoRepository eventoRepository;
@@ -51,12 +38,12 @@ public class EventoService {
 		
 		//valida custo maior que 0.0
 		if(evento.getCusto() <= 0.0) {
-			throw new BusinessException("Não é possível adicionar um custo com valor menor que 0 reais!");
+			throw new BusinessException("Nao eh possivel adicionar um custo com valor menor que 0 reais!");
 		}
 		
 		// valida custo
 		if (!ValidaCusto.isCustoValido(evento.getCusto()))
-				throw new BusinessException("Não é possivel adicionar custo com letra!");
+				throw new BusinessException("Nï¿½o ï¿½ possivel adicionar custo com letra!");
 				
 		// valida titulo de evento unico
 		eventoDB = eventoRepository.findEventoByTituloByCerimonial(evento.getTitulo(), evento.getCerimonial());

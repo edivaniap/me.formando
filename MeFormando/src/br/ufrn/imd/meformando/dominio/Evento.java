@@ -2,7 +2,6 @@ package br.ufrn.imd.meformando.dominio;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,8 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "evento")
@@ -23,7 +20,6 @@ public class Evento {
 	@SequenceGenerator(name="SEQ_EVENTOCOMEMORACAO", sequenceName="id_seq_eventocomemoracao", allocationSize=1)
 	private int id;
 	
-	//@Column(unique = true)
 	private String titulo;
 	
 	private double custo;
@@ -42,19 +38,13 @@ public class Evento {
 		return cerimonial;
 	}
 
-
-
 	public void setCerimonial(Cerimonial cerimonial) {
 		this.cerimonial = cerimonial;
 	}
 
-
-
 	public Evento() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	
 
 	public Evento(String titulo, double custo, Date data, String descricao) {
 		super();
@@ -63,8 +53,6 @@ public class Evento {
 		this.data = data;
 		this.descricao = descricao;
 	}
-
-
 
 	public int getId() {
 		return id;
@@ -126,6 +114,5 @@ public class Evento {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}
-	
+	}	
 }
