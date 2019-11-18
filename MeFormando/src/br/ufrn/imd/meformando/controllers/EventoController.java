@@ -120,6 +120,26 @@ public class EventoController {
 
 	}
 	
+	/*FAZENDO*/
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Path("/deletar")
+	public Response deletar(@HeaderParam("token") String token,@HeaderParam("id") int id ) throws ParseException {
+
+			String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+			if (emailAutenticado == null) {
+			
+				return Response.status(202).build();
+			}else {
+				
+				Evento evento = eventoService.getEventoId(id);
+				eventoService.remover(evento);
+				
+				return Response.status(201).build();
+			}
+
+	}
+	
 	@GET
 	@Path("/eventoSelecionado")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)

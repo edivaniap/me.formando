@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -21,9 +22,12 @@ import br.ufrn.imd.meformando.dominio.Cerimonial;
 import br.ufrn.imd.meformando.dominio.Evento;
 import br.ufrn.imd.meformando.dominio.Formando;
 import br.ufrn.imd.meformando.dominio.Turma;
+import br.ufrn.imd.meformando.exceptions.BusinessException;
 import br.ufrn.imd.meformando.repositories.CerimonialRepository;
 import br.ufrn.imd.meformando.repositories.FormandoRepository;
 import br.ufrn.imd.meformando.repositories.TurmaRepository;
+import br.ufrn.imd.meformando.services.CerimonialService;
+import br.ufrn.imd.meformando.services.FormandoService;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
 
 @Stateless
@@ -39,22 +43,38 @@ public class CerimonialController {
 	@Inject 
 	private TurmaRepository turmaRepository;
 	
+	@EJB
+	private FormandoService formandoService;
+	
+	@EJB
+	private CerimonialService cerimonialService;
+	
+	/*USANDO O SERVICE*/
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/criar")
 	public Response criar(@HeaderParam("token") String token,@FormParam("Nome") String nome, @FormParam("Custo") int custo, 
 			@FormParam("Descricao") String descricao ) {
 		
-			String emailFormando = TokenAuthenticationService.getAuthentication(token);
-			if (emailFormando == null) {
+			String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+			if (emailAutenticado == null) {
 				return Response.status(202).build();
 			}else {
-				Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
+				Formando formandoAutenticado = formandoService.getFormando(emailAutenticado);
+				
 				Cerimonial cerimonial = new Cerimonial(nome,custo,descricao);
-				Turma atualizarTurma = turmaRepository.findTurmaByFormando(formando);
-				atualizarTurma.setCerimonial(cerimonial);
-				turmaRepository.alterar(atualizarTurma);			
-				cerimonialRepository.adicionar(cerimonial);
+				
+				formandoAutenticado.getTurma().setCerimonial(cerimonial);
+				
+//				Turma atualizarTurma = turmaRepository.findTurmaByFormando(formando);
+//				atualizarTurma.setCerimonial(cerimonial);
+//	VER ESSA LINHA			turmaRepository.alterar(atualizarTurma);			
+				try {
+					cerimonialService.adicionar(cerimonial);
+				} catch (BusinessException e) {
+					return Response.status(202).header("erro", e.getMessage()).build();
+				}
+				
 				return Response.status(201).build();
 			
 			}
@@ -67,11 +87,11 @@ public class CerimonialController {
 	public Response alterar(@HeaderParam("token") String token,@FormParam("Nome") String nome, @FormParam("Custo") int custo, 
 			@FormParam("Descricao") String descricao ) {
 		
-			String emailFormando = TokenAuthenticationService.getAuthentication(token);
-			if (emailFormando == null) {
+			String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+			if (emailAutenticado == null) {
 				return Response.status(202).build();
 			}else {
-				Formando formando = formandoRepository.findFormandoByEmail(emailFormando);
+				Formando formando = formandoRepository.findFormandoByEmail(emailAutenticado);
 				
 				Turma atualizarTurma = turmaRepository.findTurmaByFormando(formando);
 				Cerimonial cerimonial = atualizarTurma.getCerimonial();
@@ -80,6 +100,7 @@ public class CerimonialController {
 				cerimonial.setDescricao(descricao);
 				atualizarTurma.setCerimonial(cerimonial);
 				turmaRepository.alterar(atualizarTurma);			
+				
 				cerimonialRepository.alterar(cerimonial);
 				return Response.status(201).build();
 			

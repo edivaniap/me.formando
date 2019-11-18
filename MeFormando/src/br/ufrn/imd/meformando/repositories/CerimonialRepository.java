@@ -4,8 +4,12 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import br.ufrn.imd.meformando.dominio.Cerimonial;
+import br.ufrn.imd.meformando.dominio.Evento;
 
 
 @Stateless
@@ -37,7 +41,16 @@ public class CerimonialRepository {
 		return (List<Cerimonial>) em.createQuery("select c from Cerimonial c").getResultList();
 	}
 
-	
+	public Cerimonial findCerimonialByNome(String nome) {
+		try {
+			String jpaql = "select c from Cerimonial c where e.nome = :nome";
+			Query q = em.createQuery(jpaql);
+			q.setParameter("nome", nome);
+			return (Cerimonial) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 
 
 }
