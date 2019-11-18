@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import br.ufrn.imd.meformando.dominio.Formando;
@@ -21,6 +23,7 @@ public class PagamentoService {
 		return mensalidadeRepository.findMensalidadeByFormando(formando);
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void cadastrarMensalidade(Turma turma, Date mes, double valor) {
 		
 		List<Formando> formandos = turma.getFormandos();

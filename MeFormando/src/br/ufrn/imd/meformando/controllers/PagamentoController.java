@@ -1,5 +1,7 @@
 package br.ufrn.imd.meformando.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -32,13 +35,12 @@ public class PagamentoController {
 	private PagamentoService pagamentoService;
 	
 	@GET
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces("application/json; charset=UTF-8")
 	@Path("/mensalidades")
 	public List<Mensalidade> mensalidades(@HeaderParam("token") String token){
 		String email = TokenAuthenticationService.getAuthentication(token);
 		Formando formando = formandoService.getFormando(email);
 		List<Mensalidade> mensalidades = pagamentoService.mensalidades(formando);
-		System.out.print(mensalidades);
 		return mensalidades;
 	}
 	
@@ -46,7 +48,7 @@ public class PagamentoController {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/cadastrarMensalidade")
 	public Response cadastrarMensalidade(@HeaderParam("token") String token, 
-			@FormParam("mes") Date mes, @FormParam("valor") double valor) {
+			@FormParam("mes") String mes, @FormParam("valor") double valor) {
 		String email = TokenAuthenticationService.getAuthentication(token);
 		Formando formando = formandoService.getFormando(email);
 		
@@ -54,7 +56,15 @@ public class PagamentoController {
 			return Response.status(401).build();
 		}
 		
-		pagamentoService.cadastrarMensalidade(formando.getTurma(), mes, valor);
-		return Response.status(201).build();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+		
+		try {
+			Date mesData = formatter.parse(mes);
+			pagamentoService.cadastrarMensalidade(formando.getTurma(), mesData, valor);
+			return Response.status(201).build();
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return Response.status(400).build();
+		}
 	}
 }

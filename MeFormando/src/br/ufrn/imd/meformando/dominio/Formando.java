@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,17 +40,14 @@ public class Formando {
 	
 	private boolean isComissao;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_turma")
-	@JsonIgnore
 	private Turma turma;
 	
-	@OneToMany(mappedBy = "formando", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "formando", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Mensalidade> mensalidades;
 	
 	@OneToMany(mappedBy = "formando", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
 	private List<Convite> convites;
 
 	public List<Convite> getConvites() {

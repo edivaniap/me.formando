@@ -16,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "mensalidade")
@@ -38,7 +39,7 @@ public class Mensalidade {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_formando")
-	@JsonIgnore
+	@JsonIgnore(true)
 	private Formando formando;
 	
 	public Mensalidade() {
