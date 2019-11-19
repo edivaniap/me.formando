@@ -43,11 +43,11 @@ public class ProjetoArrecadacaoService {
 				if(projetoArrecadacao.getGanho() <= 0.0)
 					throw new BusinessException("Nao eh possivel adicionar um custo com valor menor que 0 reais!");
 				
-				//validar dataFinal não pode ser antes da dataInicial
+				//validar dataFinal nï¿½o pode ser antes da dataInicial
 				
 				projetoArrecadacaoDB = projetoArecadacaoRepository.findArrecadacaoByTituloByTurma(projetoArrecadacao.getTitulo(), projetoArrecadacao.getTurma());
 				if(projetoArrecadacaoDB != null) 
-					throw new BusinessException("Ja existe projeto de arrecadação com esse titulo cadastrado");
+					throw new BusinessException("Ja existe projeto de arrecadacao com esse titulo cadastrado");
 				
 				projetoArecadacaoRepository.adicionar(projetoArrecadacao);
 				return projetoArrecadacao;

@@ -117,8 +117,8 @@ public class TurmaController {
 				for(int i = 0; i < arrecadacoes.size(); i++) {
 					ProjetoArrecadacao projetoArrecadacao = arrecadacoes.get(i);
 					arrecadacoesDaTurma.add(Arrays.asList(projetoArrecadacao.getTitulo(),projetoArrecadacao.getCusto(),
-							projetoArrecadacao.getGanho(),projetoArrecadacao.getDataInicial().toString(),
-							projetoArrecadacao.getDataFinal().toString(), projetoArrecadacao.getId()));
+							projetoArrecadacao.getGanho(),projetoArrecadacao.getDataInicial().toString().substring(0, 10),
+							projetoArrecadacao.getDataFinal().toString().substring(0, 10), projetoArrecadacao.getId()));
 				}
 				return arrecadacoesDaTurma;
 			}else {

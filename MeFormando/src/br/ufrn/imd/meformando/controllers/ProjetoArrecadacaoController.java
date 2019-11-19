@@ -53,26 +53,30 @@ public class ProjetoArrecadacaoController {
 			@FormParam("Custo") double custo, 
 			@FormParam("Ganho") double ganho,
 			@FormParam("DateInicial") String dataInicial,
-			@FormParam("DateFinal") String dataFinal) throws ParseException {
+			@FormParam("DateFinal") String dataFinal) {
+		
+			System.out.println("T: " + titulo + " C: " + custo + " G: " + ganho + " DI: "+dataInicial + " DF: "+dataFinal);
 			
 			String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
 			if (emailAutenticado == null) {
 				return Response.status(202).build();
 			}else {
-				DateFormat formatter = new SimpleDateFormat("yy-MM-dd");
-				Date dateInicial = (Date)formatter.parse(dataInicial);
-				Date dateFinal = (Date)formatter.parse(dataFinal);
-				
-				Formando formandoAutenticado = formandoService.getFormando(emailAutenticado);
-				
-				ProjetoArrecadacao projetoArrecadacao = new ProjetoArrecadacao(titulo, custo, ganho, dateInicial, dateFinal);
-				
-				projetoArrecadacao.setTurma(formandoAutenticado.getTurma());
-				
-				
 				try {
+					DateFormat formatter = new SimpleDateFormat("yy-MM-dd");
+					Date dateInicial = (Date)formatter.parse(dataInicial);
+					Date dateFinal = (Date)formatter.parse(dataFinal);
+					
+					Formando formandoAutenticado = formandoService.getFormando(emailAutenticado);
+					
+					ProjetoArrecadacao projetoArrecadacao = new ProjetoArrecadacao(titulo, custo, ganho, dateInicial, dateFinal);
+					
+					projetoArrecadacao.setTurma(formandoAutenticado.getTurma());
 					projetoArrecadacaoService.adicionar(projetoArrecadacao);
-				} catch (BusinessException e) {
+				} catch (BusinessException be) {
+					return Response.status(202).header("erro", be.getMessage()).build();
+				} catch (ParseException pe) {
+					return Response.status(202).header("erro", pe.getMessage()).build();
+				} catch (Exception e) {
 					return Response.status(202).header("erro", e.getMessage()).build();
 				}
 				
@@ -133,7 +137,7 @@ public class ProjetoArrecadacaoController {
 			if(projetoArrecadacao != null) {
 				List<Object> turmaEnviado = new ArrayList<Object>();							
 				turmaEnviado.add(Arrays.asList(projetoArrecadacao.getTitulo(), projetoArrecadacao.getCusto(),
-						projetoArrecadacao.getGanho(), projetoArrecadacao.getDataInicial(), projetoArrecadacao.getDataFinal()));
+						projetoArrecadacao.getGanho(), projetoArrecadacao.getDataInicial().toString().substring(0, 10), projetoArrecadacao.getDataFinal().toString().substring(0, 10)));
 				return turmaEnviado;
 			}else {
 				System.out.println("Deu ruim!!!");
