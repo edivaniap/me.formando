@@ -62,9 +62,14 @@ public class ConviteService {
 	 * ! Solicita ao repositorio e retorna lista de convites buscados atravez do id da turma
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public List<Convite> listarPorTurma(int id_turma) {
+	public List<Convite> listarPorTurma(String email) {
 		
-		List<Convite> convitesTurma = conviteRepository.findConviteByTurma(id_turma);
+		Formando f = formandoRepository.findFormandoByEmail(email);
+		
+		if(f == null)
+			return null;
+		
+		List<Convite> convitesTurma = conviteRepository.findConviteByTurmaNaoAceito(f.getTurma().getId());
 
 		return convitesTurma;
 	}

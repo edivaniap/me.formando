@@ -47,9 +47,9 @@ public class ConviteRepository {
 		}	
 	}
 	
-	public List<Convite> findConviteByTurma(int id_turma){
+	public List<Convite> findConviteByTurmaNaoAceito(int id_turma){
 		try {
-			String jpaql ="select c from Convite c where c.iddaturma = :id_turma";
+			String jpaql ="select c from Convite c where c.idDaTurma = :id_turma and c.status != 'Aceito'";
 			Query q = em.createQuery(jpaql);
 			q.setParameter("id_turma", id_turma);
 			@SuppressWarnings("unchecked")

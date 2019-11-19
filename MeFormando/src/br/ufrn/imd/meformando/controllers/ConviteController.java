@@ -75,20 +75,20 @@ public class ConviteController {
 	@Path("/convidados")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json; charset=UTF-8")
-	public List<Object> convidadosTurma(@HeaderParam("token") String token, @HeaderParam("id_turma") int id_turma) {
+	public List<Object> convidadosTurma(@HeaderParam("token") String token) {
 
 		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
 		
 		List<Object> convidados = new ArrayList<Object>();
 		
 		if(emailAutenticado != null) {
-		List<Convite> convites = conviteService.listarPorTurma(id_turma);
-		
-		for (Convite c : convites) {
-			if(c.getStatus() != "Aceito")
+			List<Convite> convites = conviteService.listarPorTurma(emailAutenticado);
+			
+			for (Convite c : convites) {
 				convidados.add(Arrays.asList(c.getFormando().getNome(), c.getFormando().getEmail(), c.getStatus()));
+			}
 		}
-		}
+		
 		return convidados;
 	}
 
