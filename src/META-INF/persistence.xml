@@ -25,11 +25,11 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
             <property name="javax.persistence.jdbc.driver"
                       value="org.postgresql.Driver" />
             <property name="javax.persistence.jdbc.url"
-                      value="jdbc:postgresql://ec2-174-129-214-42.compute-1.amazonaws.com:5432/d7kegoras51hj8?ssl=true&amp;sslfactory=org.postgresql.ssl.NonValidatingFactory" />
+                      value="jdbc:postgresql://ec2-54-243-44-102.compute-1.amazonaws.com:5432/db7b7un4111eel?ssl=true&amp;sslfactory=org.postgresql.ssl.NonValidatingFactory" />
             <property name="javax.persistence.jdbc.user"
-                      value="jjjyeebeeyccfw" />
+                      value="hioeozuitiltev" />
             <property name="javax.persistence.jdbc.password"
-                      value="b95e3dcd7e275bb3ef40e57da583aeceb1662bc03c24b7453b2c96c959bcffd3" />
+                      value="973e9aec424876aa64810d2d504702437bb1a00f2f917226264eefcb09c5f23b" />
 
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="false"/>
