@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT --expand-war target/*.war
+web: target/wildfly-10.1.0.Final/bin/standalone.sh -Djboss.http.port=$PORT -b 0.0.0.0

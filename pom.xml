@@ -49,41 +49,50 @@
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
-				<configuration>
-					<release>8</release>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.1</version>
-				<configuration>
-					<warSourceDirectory>WebContent</warSourceDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
+    <plugins>
+        <plugin>
+            <groupId>org.wildfly.plugins</groupId>
+            <artifactId>wildfly-maven-plugin</artifactId>
+            <version>${version.wildfly.maven.plugin}</version>
+        </plugin>
+
+        	<plugin>
             	<groupId>org.apache.maven.plugins</groupId>
-            		<artifactId>maven-dependency-plugin</artifactId>
-            		<executions>
-                		<execution>
-                    		<phase>package</phase>
-                    		<goals><goal>copy</goal></goals>
-                    		<configuration>
-                        		<artifactItems>
-                            		<artifactItem>
-                                		<groupId>com.github.jsimone</groupId>
-                                		<artifactId>webapp-runner</artifactId>
-                                		<version>7.0.91.0</version>
-                                		<destFileName>webapp-runner.jar</destFileName>
-                            		</artifactItem>
-                        		</artifactItems>
-                    		</configuration>
-                		</execution>
+            	<artifactId>maven-dependency-plugin</artifactId>
+            	<version>3.0.0</version>
+            	<executions>
+                	<execution>
+                    	<id>unpack</id>
+                    	<phase>package</phase>
+                    	<goals>
+                        	<goal>unpack</goal>
+                    	</goals>
+                    	<configuration>
+                        	<artifactItems>
+                            	<artifactItem>
+                                	<groupId>org.wildfly</groupId>
+                                	<artifactId>wildfly-dist</artifactId>
+                                	<version>${version.wildfly}</version>
+                                	<type>zip</type>
+                                	<overWrite>false</overWrite>
+                                	<outputDirectory>target</outputDirectory>
+                            	</artifactItem>
+                        	</artifactItems>
+                    	</configuration>
+                	</execution>
             	</executions>
-       		</plugin>
-		</plugins>
+        	</plugin>
+
+        	<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-war-plugin</artifactId>
+            	<version>3.0.0</version>
+            	<configuration>
+                	<failOnMissingWebXml>false</failOnMissingWebXml>
+                	<outputDirectory>target/wildfly-${version.wildfly}/standalone/deployments</outputDirectory>
+                	<warName>${project.artifactId}</warName>
+            	</configuration>
+        	</plugin>
+    	</plugins>
 	</build>
 </project>
