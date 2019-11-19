@@ -32,8 +32,6 @@ public class Turma {
 	
 	private String curso;
 	
-	private int qtdFormandos;
-	
 	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Formando> formandos;
 	
@@ -108,14 +106,6 @@ public class Turma {
 
 	public void setCurso(String curso) {
 		this.curso = curso;
-	}
-
-	public int getQtdFormandos() {
-		return qtdFormandos;
-	}
-
-	public void setQtdFormandos(int qtdFormandos) {
-		this.qtdFormandos = qtdFormandos;
 	}
 
 	public List<Formando> getFormandos() {

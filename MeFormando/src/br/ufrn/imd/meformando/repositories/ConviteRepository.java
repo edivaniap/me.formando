@@ -46,6 +46,19 @@ public class ConviteRepository {
 			return null;
 		}	
 	}
+	
+	public List<Convite> findConviteByTurma(int id_turma){
+		try {
+			String jpaql ="select c from Convite c where c.iddaturma = :id_turma";
+			Query q = em.createQuery(jpaql);
+			q.setParameter("id_turma", id_turma);
+			@SuppressWarnings("unchecked")
+			List<Convite> resultList = (List<Convite>) q.getResultList();
+			return resultList;
+		} catch (NoResultException e) {
+			return null;
+		}	
+	}
 
 	public Convite findConviteById(int id) {
 		try {

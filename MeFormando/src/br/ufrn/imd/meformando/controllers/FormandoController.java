@@ -1,5 +1,7 @@
 package br.ufrn.imd.meformando.controllers;
 
+import java.util.Arrays;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -58,6 +60,45 @@ public class FormandoController {
 		}
 		
 		return Response.status(201).build();
+	}
+	
+	@GET
+	@Path("/turma")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces("application/json; charset=UTF-8")
+	public Object turmaPorFormando(@HeaderParam("token") String token) {
+		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+		if (emailAutenticado == null) {
+			return null;
+		}	
+
+		Formando formando = formandoService.getFormando(emailAutenticado);
+
+		return Arrays.asList(
+				formando.isConfirmadoTurma(),
+				formando.getTurma().getTitulo(),
+				formando.getTurma().getInstituicao(),
+				formando.getTurma().getCurso(),
+				formando.getTurma().getAnoFormacao(),
+				formando.getTurma().getSemestreFormacao(),
+				formando.getTurma().getFormandos().size(),
+				formando.getTurma().getId()
+				);
+	}
+	
+	@GET
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces("application/json; charset=UTF-8")
+	public Object formando(@HeaderParam("token") String token) {
+		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+		if (emailAutenticado == null) {
+			return null;
+		}	
+
+		Formando formando = formandoService.getFormando(emailAutenticado);
+
+		return Arrays.asList(formando.getNome(), formando.getEmail());
 	}
 
 	@GET

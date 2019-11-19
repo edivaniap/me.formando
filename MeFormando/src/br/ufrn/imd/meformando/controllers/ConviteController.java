@@ -1,5 +1,7 @@
 package br.ufrn.imd.meformando.controllers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -14,6 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import br.ufrn.imd.meformando.dominio.Convite;
 import br.ufrn.imd.meformando.exceptions.BusinessException;
 import br.ufrn.imd.meformando.services.ConviteService;
 import br.ufrn.imd.meformando.util.TokenAuthenticationService;
@@ -65,6 +68,28 @@ public class ConviteController {
 		}
 		
 		return resultado;
+	}
+	
+	
+	@GET
+	@Path("/convidados")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces("application/json; charset=UTF-8")
+	public List<Object> convidadosTurma(@HeaderParam("token") String token, @HeaderParam("id_turma") int id_turma) {
+
+		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
+		
+		List<Object> convidados = new ArrayList<Object>();
+		
+		if(emailAutenticado != null) {
+		List<Convite> convites = conviteService.listarPorTurma(id_turma);
+		
+		for (Convite c : convites) {
+			if(c.getStatus() != "Aceito")
+				convidados.add(Arrays.asList(c.getFormando().getNome(), c.getFormando().getEmail(), c.getStatus()));
+		}
+		}
+		return convidados;
 	}
 
 	@POST

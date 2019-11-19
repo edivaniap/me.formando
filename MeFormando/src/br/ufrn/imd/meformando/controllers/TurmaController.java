@@ -33,29 +33,6 @@ public class TurmaController {
 	private TurmaRepository turmaRepository;
 
 	@GET
-	@Path("/por_formando")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces("application/json; charset=UTF-8")
-	public Object turmaPorFormando(@HeaderParam("token") String token) {
-		String emailAutenticado = TokenAuthenticationService.getAuthentication(token);
-		if (emailAutenticado == null) {
-			return null;
-		}	
-
-		Formando formando = formandoRepository.findFormandoByEmail(emailAutenticado);
-
-		return Arrays.asList(
-				formando.isConfirmadoTurma(),
-				formando.getTurma().getTitulo(),
-				formando.getTurma().getInstituicao(),
-				formando.getTurma().getCurso(),
-				formando.getTurma().getAnoFormacao(),
-				formando.getTurma().getSemestreFormacao(),
-				formando.getTurma().getQtdFormandos()
-				);
-	}
-
-	@GET
 	@Path("/formandos")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces("application/json; charset=UTF-8")
@@ -71,8 +48,7 @@ public class TurmaController {
 			List<Object> formandosDaTurma = new ArrayList<Object>();
 			for (int i = 0; i < formandos.size(); i++) {
 				Formando formandoDaTurma = formandos.get(i);
-				formandosDaTurma.add(Arrays.asList(formandoDaTurma.getEmail(), formandoDaTurma.getNome(),
-						formandoDaTurma.isComissao()));
+				formandosDaTurma.add(Arrays.asList(formandoDaTurma.getNome(), formandoDaTurma.getEmail(), formandoDaTurma.isComissao()));
 			}
 			return formandosDaTurma;
 		}
@@ -103,7 +79,6 @@ public class TurmaController {
 			ArrayList<Formando> formandos = new ArrayList<Formando>();
 			formandos.add(formando);
 			novaTurma.setFormandos(formandos);
-			novaTurma.setQtdFormandos(1);
 			turmaRepository.adicionar(novaTurma);
 			return Response.status(201).build();
 

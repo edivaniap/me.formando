@@ -56,6 +56,17 @@ public class ConviteService {
 		}
 
 		return convitesDoFormando;
+	}	
+	
+	/*
+	 * ! Solicita ao repositorio e retorna lista de convites buscados atravez do id da turma
+	 */
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public List<Convite> listarPorTurma(int id_turma) {
+		
+		List<Convite> convitesTurma = conviteRepository.findConviteByTurma(id_turma);
+
+		return convitesTurma;
 	}
 
 	/*
