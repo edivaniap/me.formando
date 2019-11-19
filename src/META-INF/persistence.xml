@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence 
+http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+		
+	<persistence-unit name="meformando_jsf" transaction-type="JTA">    	
+    	<class>br.ufrn.imd.meformando.dominio.Cerimonial</class>
+    	<class>br.ufrn.imd.meformando.dominio.Convite</class>
+    	<class>br.ufrn.imd.meformando.dominio.Equipe</class>
+    	<class>br.ufrn.imd.meformando.dominio.EventoComemoracao</class>
+    	<class>br.ufrn.imd.meformando.dominio.Formando</class>
+    	<class>br.ufrn.imd.meformando.dominio.Mensalidade</class>
+    	<class>br.ufrn.imd.meformando.dominio.Opcao</class>
+    	<class>br.ufrn.imd.meformando.dominio.Pagamento</class>
+    	<class>br.ufrn.imd.meformando.dominio.ProjetoArrecadacao</class>
+    	<class>br.ufrn.imd.meformando.dominio.Tarefa</class>
+    	<class>br.ufrn.imd.meformando.dominio.Turma</class>
+    	<class>br.ufrn.imd.meformando.dominio.Votacao</class>
+    	<class>br.ufrn.imd.meformando.dominio.Voto</class>
+    	
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL94Dialect" />
+            <!--dados da conexao -->
+            <property name="javax.persistence.jdbc.driver"
+                      value="org.postgresql.Driver" />
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:postgresql://ec2-174-129-214-42.compute-1.amazonaws.com:5432/d7kegoras51hj8?ssl=true&amp;sslfactory=org.postgresql.ssl.NonValidatingFactory" />
+            <property name="javax.persistence.jdbc.user"
+                      value="jjjyeebeeyccfw" />
+            <property name="javax.persistence.jdbc.password"
+                      value="b95e3dcd7e275bb3ef40e57da583aeceb1662bc03c24b7453b2c96c959bcffd3" />
+
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
+
+            <property name="javax.persistence.validation.mode" value="NONE"/>
+        </properties>
+    </persistence-unit>
+</persistence>
