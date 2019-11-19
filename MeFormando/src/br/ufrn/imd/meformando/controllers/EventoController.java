@@ -114,7 +114,7 @@ public class EventoController {
 			Evento evento = eventoService.getEventoId(id);
 			if(evento != null) {
 				List<Object> cerimonialEnviado = new ArrayList<Object>();							
-				cerimonialEnviado.add(Arrays.asList(evento.getTitulo(),evento.getDescricao(),evento.getData().toString(),evento.getCusto()));
+				cerimonialEnviado.add(Arrays.asList(evento.getTitulo(),evento.getDescricao(),evento.getData().toString().substring(0, 10),evento.getCusto()));
 				return cerimonialEnviado;
 			}else {
 				System.out.println("Deu ruim!!!");

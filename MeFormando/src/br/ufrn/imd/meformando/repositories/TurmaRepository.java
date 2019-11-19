@@ -44,5 +44,16 @@ public class TurmaRepository {
 			return null;
 		}
 	}
+	
+	public Turma findTurmaByTitulo(String titulo) {
+		try {
+			String jpaql ="select t from Turma t where t.titulo = :titulo";
+			Query q = em.createQuery(jpaql);
+			q.setParameter("titulo", titulo);
+			return (Turma) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 }
 
