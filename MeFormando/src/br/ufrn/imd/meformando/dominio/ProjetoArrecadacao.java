@@ -43,6 +43,23 @@ public class ProjetoArrecadacao {
 	public ProjetoArrecadacao() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public ProjetoArrecadacao(String titulo, double custo, double ganho, Date dataInicial, Date dataFinal) {
+		super();
+		this.titulo = titulo;
+		this.custo = custo;
+		this.ganho = ganho;
+		this.dataInicial = dataInicial;
+		this.dataFinal = dataFinal;
+		
+	}
+	public Turma getTurma() {
+		return turma;
+	}
+
+	public void setTurma(Turma turma) {
+		this.turma = turma;
+	}
 
 	public int getId() {
 		return id;
