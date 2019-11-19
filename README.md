@@ -1,6 +1,7 @@
-# me.formando
-Sistema de Planejamento de Formaturas
+## Me Formando - API
 
-## Diagrama de Classe 
-(a ser revisado)
+![logo](me-formando-300.png)
+
+### Dominio
+
 ![diagram](dominio.jpeg)
