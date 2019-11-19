@@ -15,6 +15,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "mensalidade")
 public class Mensalidade {
@@ -36,10 +39,19 @@ public class Mensalidade {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_formando")
+	@JsonIgnore(true)
 	private Formando formando;
 	
 	public Mensalidade() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Mensalidade(double valor, Date mes, boolean isPago, Formando formando) {
+		super();
+		this.valor = valor;
+		this.mes = mes;
+		this.isPago = isPago;
+		this.formando = formando;
 	}
 
 	public int getId() {
